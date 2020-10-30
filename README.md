@@ -17,7 +17,7 @@ ___
 
 > - Prolog implementation of the NAVA board game
 > - identification of the group
->   - Nava_1
+>   - Nava_2
 >   - Practical Class 3
 >   - Flávia Carvalho Gavinha Pereira Carvalhido - up201806857
 >   - Tomás Costa Fontes - up 
@@ -46,10 +46,56 @@ someone captures all Disc stacks or lays all of their Cubes. A stack belongs to 
 >   - final game state
 > - indication of the meaning of each atom, i.e., how the pieces are represented
 
+The board contains 5 lines, with 5 playable cells in each line, making it a 5x5 matrix. However, because each cell can have multiple pieces in it, we decided to use a list of lists of lists, representing the rows, the cells in each row and the stack of pieces in each cell, respectively.
+We also decided to represent each cell as a list with 12 elements, as pieces can stack up to that number on the same cell.
+
+Each piece is represented using an atom, which is then translated to a specific character when the board is displayed. The pieces are encoded as follows:
+| Piece      | atom | character     |
+|:----------:|:----:|:-------------:|
+| white Disc | w    | X             |
+| black Disc | b    | O             |
+| white Cube | wC   | &             |
+| black Cube | bC   | I             |
+| empty Cell | e    | whitespace( ) |
+
+The game state is represented by a list containing three elements, the board, the number of black cubes available to play and the number of white cubes available to play.
+
+Below are some examples of the game state representation both as PROLOG code and as console output.
+
+Initial state:
+<p align="center">
+  <img src="images/initialPROLOG.PNG" />
+</p>
+
+Intermediate state:
+<p align="center">
+  <img src="images/intermediatePROLOG.PNG" />
+</p>
+
+Final state:
+<p align="center">
+  <img src="images/final1PROLOG.PNG" />
+</p>
+
+<p align="center">
+  <img src="images/final2PROLOG.PNG" />
+</p>
+
+
 
 ## Visualization of the game state
 
 > small description about the implementation of the predicate of the game state visualization (**max 200 words**)
+
+The game state visualization on the SICSTUS console is as follows.
+<p align="center">
+  <img src="images/initialPRINT.PNG" />
+</p>
+
+The initial game state is generated using the **_initial(-GameState)_** predicate, which calls the **_initialBoard(-Board)_** predicate to generate the initial board and then sets the number of black and white cubes to their respective values.
+The visualization of the game state is executed using the **_displayGame(+GameState, +Player)_** predicate. This predicate calls **_displayBoard(+Board)_** to display the received board and displays the remaining information itself.
+The **_displayBoard(+Board)_** predicate calls recursively some auxiliary predicates, like **_displayLine_**, **_displayCell_** and **_displayPiece_**, using them to recursively print the game board.
+
 
 ## Documentation
 
