@@ -46,13 +46,13 @@ The board contains 5 lines, with 5 playable cells in each line, making it a 5x5 
 We also decided to represent each cell as a list with 12 elements, as pieces can stack up to that number on the same cell.
 
 Each piece is represented using an atom, which is then translated to a specific character when the board is displayed. The pieces are encoded as follows:
-| Piece      | atom | character     |
-|:----------:|:----:|:-------------:|
-| white Disc | w    | X             |
-| black Disc | b    | O             |
-| white Cube | wC   | &             |
-| black Cube | bC   | I             |
-| empty Cell | e    | whitespace( ) |
+| Piece      | atom | character       |
+|:----------:|:----:|:---------------:|
+| white Disc | w    | X               |
+| black Disc | b    | O               |
+| white Cube | wC   | &               |
+| black Cube | bC   | I               |
+| empty Cell | e    | whitespace(' ') |
 
 The game state is represented by a list containing three elements, the board, the number of black cubes available to play and the number of white cubes available to play.
 
