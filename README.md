@@ -15,12 +15,12 @@ ___
 
 ## Who and What
 
-> - Prolog implementation of the NAVA board game
-> - identification of the group
->   - Nava_2
->   - Practical Class 3
->   - Flávia Carvalho Gavinha Pereira Carvalhido - up201806857
->   - Tomás Costa Fontes - up 
+- Prolog implementation of the NAVA board game
+- identification of the group
+  - Nava_2
+  - Practical Class 3
+  - Flávia Carvalho Gavinha Pereira Carvalhido - up201806857
+  - Tomás Costa Fontes - up 
 
 
 ## Game and Rules?
@@ -40,7 +40,9 @@ ___
 - If a player loses possession of all of their stacks, they are eliminated. 
 - The first player with all their Cubes on the board or the last person in the game with Disc stacks is the winner!
 
-> - Biography:
+- Biography:
+  - Official Game Page: https://boardgamegeek.com/boardgame/250491/nava
+  - Official Rule Sheet: https://drive.google.com/file/d/1qfZp_uDWRPxPU5U2lN-EGNDfEHkjha1u/view
 
 
 
@@ -95,8 +97,6 @@ Final state:
 
 
 ## Visualization of the game state
-
-> small description about the implementation of the predicate of the game state visualization (**max 200 words**)
 
 The game state visualization on the SICSTUS console is as follows.
 <p align="center">
