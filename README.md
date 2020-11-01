@@ -20,7 +20,7 @@ ___
   - Nava_2
   - Practical Class 3
   - Flávia Carvalho Gavinha Pereira Carvalhido - up201806857
-  - Tomás Costa Fontes - up 
+  - Tomás Costa Fontes - up201806252
 
 
 ## Game and Rules?
@@ -59,7 +59,7 @@ Each piece is represented using an atom, which is then translated to a specific 
 | black Cube | bC   | I               |
 | empty Cell | e    | whitespace(' ') |
 
-The game state is represented by a list containing three elements, the board, the number of black cubes available to play and the number of white cubes available to play.
+The game state is represented by a list containing three elements, the board, the number of black cubes available to play and the number of white cubes available to play, respectively.
 
 Below are some examples of the game state representation both as PROLOG code and as console output.
 
