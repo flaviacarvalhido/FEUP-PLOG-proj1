@@ -1,6 +1,7 @@
 :-include('board.pl').
 :- use_module(library(lists)).
 
+% displays the game
 displayGame(GameState, Player):- nth0(0, GameState, Board),
 								nth0(1, GameState, BlackCubes),
 								nth0(2, GameState, WhiteCubes),
@@ -11,6 +12,5 @@ displayGame(GameState, Player):- nth0(0, GameState, Board),
 								nl,
 								write('White has '), write(WhiteCubes), write(' cubes available to play.').
 
+% starting point predicate
 play:- initial(GameState), displayGame(GameState, 'player1').
-
-test:- finalState2(GameState), displayGame(GameState, 'player1').
