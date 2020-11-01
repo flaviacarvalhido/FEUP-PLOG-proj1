@@ -1,6 +1,7 @@
 # Nava
 
 Resolution proposal for the first project of the Logic Programming course unit @ FEUP, a game board called [**Nava**](https://boardgamegeek.com/boardgame/250491/nava)
+
 [Official Board and Rules](https://drive.google.com/file/d/1qfZp_uDWRPxPU5U2lN-EGNDfEHkjha1u/view).
 
 - [Nava](#nava)
@@ -25,19 +26,20 @@ ___
 
 ## Game and Rules?
 
-- Nava is an abstract game, where players compete to be the first to lay all of their Cubes down on the board. They do this by moving Discs to capture rival pieces and lay Cubes to conquer junctions. 
-- For 2 players, the game board is a 4x4 square and each player has 6 Discs and 9 Cubes each, starting with all their Discs stacked in opposite corners of the board. 
-- Players take turns until someone captures all Disc stacks or lays all of their Cubes. If a player does that, they win and the other player loses. 
-- A stack belongs to the player with their Disc at the top. 
-- On their turn, a player must take a number of discs from the top of one of their stacks and move them, along a straight line, to another junction. The distance a stack moves is the same as the number of Discs in that stack, therefore, if a player takes a 2 disc stack, it can move 2 junctions. In a single move, stacks can't turn corners. 
-- If a player moves their stack onto another stack it becomes theirs, including all opponents Discs in that stack. 
-- Players can move all discs in stacks that they own, regardless of colour. 
+- Nava is a game where players compete to be the first to lay all their Cubes on the board. They do this by moving Discs to capture rival pieces and lay Cubes to conquer junctions. 
+- For 2 players, the game board is a 4x4 square and each player has 6 Discs and 9 Cubes, starting with all their Discs stacked in opposite corners. 
+- Players take turns until someone captures all Disc stacks or lays all their Cubes, therefore winning. 
+- Stacks belong to the player with their Disc on top. 
+- On their turn, players take a number of Discs from the top of one of their stacks and move them, along a straight line, to another junction. The distance stacks move matches the number of Discs in that stack. If players take a 2 disc stack, they move 2 junctions. 
+- Stacks can't turn corners in single moves. 
+- When players move their stack onto another stack it becomes theirs, including any opponent's Discs. 
+- Players move all Discs in owned stacks, regardless of colour. 
 - If their stack has more Discs than junctions available and they wish to move to the edge of the board, they must split their stack. 
-- Furthermore, a player may choose to move a whole stack, (including captured opponents), or split their stack and move part of it. 
-- If a player moves their entire stack off a junction, leaving it empty, then they place a Cube on this junction. 
-- If a player lands on a Cube, they give the Cube back to the Cube’s owner and place their stack on this junction (this includes when a player lands on their own Cube). 
-- When a player splits their stack, they may create an opponent-controlled stack in the process, as long as the top Disc from the resulting stack is from the opponent. 
-- The first player with all their Cubes on the board or the last person in the game with Disc stacks is the winner!
+- Furthermore, a player may choose to move a whole stack (including captured opponents), or split their stack and move part of it. 
+- When players move their entire stack off junctions, emptying them, then they place a Cube on these junctions. 
+- When players land on Cubes, they give the Cube back to the Cube’s owner and place their stack on this junction (even when they land on their own Cube). 
+- When players split their stack, they may create an opponent-controlled stack, as long as the top Disc from the resulting stack is from the opponent. 
+- First player with all Cubes on the board or the last in game with Disc stacks is the winner!
 
 - Biography:
   - Official Game Page: https://boardgamegeek.com/boardgame/250491/nava
