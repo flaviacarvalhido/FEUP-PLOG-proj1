@@ -4,7 +4,7 @@
 initial(GameState):- initialBoard(Board),
 						BlackCubes = 9,
 						WhiteCubes = 9,
-						GameState = [Board,blackCubes,whiteCubes].
+						GameState = [Board,BlackCubes,WhiteCubes].
 
 % generates the initial board
 initialBoard([
@@ -13,6 +13,14 @@ initialBoard([
 			[[e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e]],
 			[[e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e]],
 			[[e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [b,b,b,b,b,b,e,e,e,e,e,e]]
+			]).
+
+initialBoardTest([
+			[[w,w,w,w,w,w], [], [], [], []],
+			[[], [], [], [], []],
+			[[], [], [], [], []],
+			[[], [], [], [], []],
+			[[], [], [], [], [b, b, b, b, b, b]]
 			]).
 
 % Hardcoded initial state
@@ -104,19 +112,28 @@ intermediateState(
 ]
 ).
 
+testDisplay:- initialBoard(Board), displayFullBoard(Board).
+testWrite:- format(' er ~|~s~t~50|~|   er~n', ['b b b']).
+
+displayFullBoard(Board):- write('|            1                         2                           3                           4                           5             |'), nl, displayBoard(Board, 5).
 
 % displays the board
-displayBoard([]).
-displayBoard([L|[]]):- displayLine(L), nl.
-displayBoard([L|T]):- displayLine(L), nl, displayIntermediateLine, nl, displayIntermediateLine, nl, displayBoard(T).
+displayBoard([], _).
+displayBoard([L|[]], N):- displayLine(L, 5, N), displayBorderHorizontal, nl.
+displayBoard([L|T], N):- N =:= 5, !, N1 is N-1, displayBorderHorizontal, nl, displayIntermediateLineEmpty, nl, displayLine(L, 5, N), displayIntermediateLineEmpty, nl, displayIntermediateLine, nl, displayIntermediateLine, nl, displayIntermediateLineEmpty, nl, displayBoard(T, N1).
+displayBoard([L|T], N):- N1 is N-1, displayIntermediateLineEmpty, nl, displayLine(L, 5, N), displayIntermediateLine, nl, displayIntermediateLine, nl, displayIntermediateLineEmpty, nl, displayBoard(T, N1).
 
 % displays a line for the board aesthetics
-displayIntermediateLine:- write('            |                         |                           |                           |                           |            ').
+displayIntermediateLineEmpty:- write('|                                                                                                                                        |').
+displayIntermediateLine:- write('|            |                         |                           |                           |                           |             |').
+displayBorderHorizontal:- write(' ________________________________________________________________________________________________________________________________________').
+displayBorderVertical:- write('|').
 
 % displays a line of the board
-displayLine([]).
-displayLine([C|[]]):- displayCell(C).
-displayLine([C|L]):- displayCell(C),write(' -- '), displayLine(L).
+displayLine([], _, Nrow).
+displayLine([C|[]], N, Nrow):- displayCell(C), displayBorderVertical, write(' '), write(Nrow), nl.
+displayLine([C|L], N, Nrow):- N =:= 5, !, N1 is N-1, displayBorderVertical, displayCell(C), write(' -- '), displayLine(L, N1, Nrow).
+displayLine([C|L], N, Nrow):- N1 is N-1, displayCell(C), write(' -- '), displayLine(L, N1, Nrow).
 
 % displays a cell of the board
 displayCell([]).
