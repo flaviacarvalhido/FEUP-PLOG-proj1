@@ -6,7 +6,7 @@ test_get:- get_matrix_value(2, 1, [[1, 2, 3],
 									], Res).
 
 getMatrixValue(NRow, NCol, Matrix, Res):- nth0(NRow, Matrix, Row),
-											nth0(Ncol, Row, Res).
+											nth0(NCol, Row, Res).
 
 getTopPiece([H|_], H).
 
@@ -28,7 +28,6 @@ replaceInList([H|T], Index, Value, [H|TNew]) :-
 
 replaceInMatrix([H|T], 0, Column,Value, [HNew|T]) :-
         replaceInList(H, Column, Value, HNew).
-
 replaceInMatrix([H|T], Row, Column, Value, [H|TNew]) :-
         Row > 0,
         Row1 is Row - 1,
@@ -41,14 +40,26 @@ replace([H|T], RowR, Row, Column, Value, [H|TNew]):-    RowR > 0,
 												        replace(T, RowR1, Row, Column, Value, TNew).
 
 
-% Need a predicate to remove from list the extra empty spots
+removeFromListEnd(NumberToRemove, List, NewList):- reverse(List, RevList), removeFirstNElements(NumberToRemove, RevList, TempRevList), reverse(TempRevList, NewList).
 
-buildListToRemove(0, List, List):-!.
-buildListToRemove(Length, List, FinalList):- Length > 0, LengthNew is Length-1, 
-											buildListToRemove(LengthNew, [e|List], FinalList).
+buildListToAdd(0, List, List):-!.
+buildListToAdd(Length, List, FinalList):- Length > 0, LengthNew is Length-1, 
+											buildListToAdd(LengthNew, [e|List], FinalList).
 
-removeFromList(NumberToRemove, List, NewList):- buildListToRemove(NumberToRemove, [], ToRemove), append(NewList, ToRemove, List).
+refillList(List, FinalList):- length(List, Len), LenToAdd is 12-Len, buildListToAdd(LenToAdd, [], ListToAdd), append(List, ListToAdd, FinalList).
 
+getFirstNElements(0, _, Acc, Elements):- reverse(Acc, Elements).
+getFirstNElements(N, [Head|Tail], Acc, Elements):-  N > 0, N1 is N-1,
+												getFirstNElements(N1, Tail, [Head|Acc], Elements).
+
+removeFirstNElements(0, List, List):-!.
+removeFirstNElements(N, List, FinalList):- N > 0, N1 is N-1,
+										removeFirstElement(List, NewList),
+										removeFirstNElements(N1, NewList, FinalList).
+
+removeFirstElement([Head|Tail], Tail).
+
+testRefill:- refillList([b, b, w, b, b, e], List), printList(List).
 testRemove:- removeFromList(3, [1, 2, 3, 4, 5, 6], NewList), printList(NewList).
 
 printList([]):-!.

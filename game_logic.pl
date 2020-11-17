@@ -15,4 +15,19 @@ validMove([X1, Y1, X2, Y2|_], Board, Color):- 	validCoords(5, 5, X1, Y1), validC
 												getDistance(X1, Y1, X2, Y2, Distance), Distance > 0, Distance < 5, Distance =< NumPieces.
 
 
-movePieces(Board, Move):- !.
+testPrep:- prepCellDest([b, b, b, b, b, b, e, e, e, e, e, e], [w, w, w], NewCell), printList(NewCell).
+
+
+
+prepCellSource(Cell, NumberOfPiecesToMove, NewCell):- 	removeFirstNElements(NumberOfPiecesToMove, Cell, CellAfter),
+														refillList(CellAfter, NewCell).
+prepCellDest(Cell, PiecesToAdd, NewCell):- append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
+
+movePieces(Board, [X1, Y1, X2, Y2|_], NewBoard):- 	getMatrixValue(X1, Y1, Board, SourceCell), getMatrixValue(X2, Y2, Board, DestCell),
+													getDistance(X1, Y1, X2, Y2, Distance),
+													getFirstNElements(Distance, SourceCell, [], PiecesToMove),
+													prepCellSource(SourceCell, Distance, NewSourceCell),
+													prepCellDest(DestCell, PiecesToMove, NewDestCell),
+													replaceInMatrix(Board, X1, Y1, NewSourceCell, TempBoard),
+													replaceInMatrix(TempBoard, X2, Y2, NewDestCell, NewBoard).
+
