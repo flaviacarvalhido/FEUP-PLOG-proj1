@@ -2,6 +2,7 @@
 :-include('game_logic.pl').
 :-include('utils.pl').
 :-include('ai.pl').
+:-include('menus.pl').
 :- use_module(library(lists)).
 
 % displays the game
@@ -46,9 +47,9 @@ play(GameState, Player):-
 	get 'Y' asking 'Game ended. Do you wish to play again? (Y/N)',
 	play.
 
-testValidMove:- initialBoard(Board), validMove([0, 0, 1, 0], Board, w).
+testValidMove:- initialBoard(Board), validMove([0, 0, 0, 4], Board).
 
-testMove:- initialBoard(Board), movePieces(Board, [0, 0, 0, 2], NewBoard), displayBoard(NewBoard, 5).
+testMove:- initialBoard(Board), movePieces(Board, [0, 0, 0, 2], NewBoard), displayBoard(NewBoard, 5), movePieces(NewBoard, [0, 2, 0, 4], NewNewBoard), displayBoard(NewNewBoard, 5).
 
 testMove2:- initialBoard(Board), getMatrixValue(0, 0, Board, SourceCell), getMatrixValue(0, 2, Board, DestCell), printList(SourceCell), nl, printList(DestCell).
 

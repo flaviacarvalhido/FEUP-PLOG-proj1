@@ -88,3 +88,5 @@ printListOfList([Head|Tail]):- printList(Head), write('  '), printListOfList(Tai
 get Answer asking Question :-
 	write(Question), write(' '),
 	read(Answer).
+
+clearConsole :- write('\33\[2J').

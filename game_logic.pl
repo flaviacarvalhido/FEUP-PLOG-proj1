@@ -128,13 +128,27 @@ countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- countCub
 
 prepCellSource(Cell, NumberOfPiecesToMove, NewCell):- 	removeFirstNElements(NumberOfPiecesToMove, Cell, CellAfter),
 														refillList(CellAfter, NewCell).
+
 prepCellDest(Cell, PiecesToAdd, NewCell):- append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
+
+insertCube(Cell, NewCell, w):- Cell == [e, e, e, e, e, e, e, e, e, e, e, e], !, NewCell = [wC, e, e, e, e, e, e, e, e, e, e, e].
+insertCube(Cell, Cell, w).
+insertCube(Cell, NewCell, b):- Cell == [e, e, e, e, e, e, e, e, e, e, e, e], !, NewCell = [bC, e, e, e, e, e, e, e, e, e, e, e].
+insertCube(Cell, Cell, b).
 
 movePieces(Board, [X1, Y1, X2, Y2|_], NewBoard):- 	getMatrixValue(X1, Y1, Board, SourceCell), getMatrixValue(X2, Y2, Board, DestCell),
 													getDistance(X1, Y1, X2, Y2, Distance),
 													getFirstNElements(Distance, SourceCell, [], PiecesToMove),
-													prepCellSource(SourceCell, Distance, NewSourceCell),
+													prepCellSource(SourceCell, Distance, TempSourceCell),
 													prepCellDest(DestCell, PiecesToMove, NewDestCell),
+													getTopPiece(SourceCell, TopPiece),
+													insertCube(TempSourceCell, NewSourceCell, TopPiece),
 													replaceInMatrix(Board, X1, Y1, NewSourceCell, TempBoard),
 													replaceInMatrix(TempBoard, X2, Y2, NewDestCell, NewBoard).
+
+move(GameState, Move, NewGameState):- 	nth0(0, GameState, Board),
+										movePieces(Board, Move, NewBoard),
+										countCubesBoard(b, NewBoard, 0, BlackCubes),
+										countCubesBoard(w, NewBoard, 0, WhiteCubes),
+										NewGameState = [NewBoard, BlackCubes, WhiteCubes].
 
