@@ -37,7 +37,7 @@ validMove([X1, Y1, X2, Y2|_], Board):- 			/*TODO:tem de haver um predicado que v
 	getDistance(X1, Y1, X2, Y2, Distance), Distance > 0, Distance < 5, Distance =< NumPieces.
 
 
-/* movePieces(Board, Move):- !. */
+isMoveValidColor(Color, [X1, Y1, X2, Y2|_], Board):- getMatrixValue(X1, Y1, Board, Cell), getTopPiece(Cell, Piece), Piece == Color.
 
 
 /*ask stack to move*/

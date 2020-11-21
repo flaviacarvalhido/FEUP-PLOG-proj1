@@ -56,11 +56,13 @@ testAllMoves:- initialBoard(Board), getAllValidMoves(Board, Moves, w), write('Pr
 
 testGetNumPieces:- intermediateBoard(Board), getNumPiecesOfColorBoard(Board, b, 0, NumPieces), write(NumPieces).
 
-testAllValidMoves:- initialBoard(Board), getAllValidMoves(Board, Moves), printListOfList(Moves).
+testAllValidMoves:- initialBoard(Board), getAllValidMoves(Board, Moves, w), printListOfList(Moves).
 
 testCountCubes:- finalBoard2(Board), countCubesBoard(bC, Board, 0, NumCubes), write(NumCubes).
 
 testSortMoves:- initialBoard(Board), sortMovesByScore(Board, SortedMoves, Color), printList(SortedMoves).
 
 testEvaluate:- initial(GameState), evaluateState(GameState, w, Score), write(Score).
+
+testMapMoves:- initialBoard(Board), sortMovesByScore(Board, SortedMoves, w), getRandomMove(SortedMoves, Move), printList(Move).
 
