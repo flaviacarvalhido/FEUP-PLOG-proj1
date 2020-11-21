@@ -26,6 +26,7 @@ play(GameState, Player):-
 	
 	askForPiece(Move, Player, Board),
 	/*TODO:check all valid moves*/
+	/*TODO: display valid moves in board*/
 	/*TODO:ask for move (and check if it is in validMoves list)*/
 	/*TODO:make Move a list with [currentCoordinates, newCoordinates]*/
 	move(GameState, Move, NewGameState),							/*Move -> 0:Row, 1:Column*/
@@ -45,6 +46,8 @@ play(GameState, Player):-
 	/*play again*/
 	get 'Y' asking 'Game ended. Do you wish to play again? (Y/N)',
 	play.
+
+	
 
 testValidMove:- initialBoard(Board), validMove([0, 0, 1, 0], Board, w).
 

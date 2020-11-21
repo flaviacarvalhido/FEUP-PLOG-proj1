@@ -8,19 +8,56 @@ sameRowOrColumn(X1, Y1, X2, Y2):- X1 =:= X2; Y1 =:= Y2.
 
 
 /*move*/
-%move(GameState, Move, NewGameState):-
-	/*TODO*/
 
+/*testPrep:- prepCellDest([b, b, b, b, b, b, e, e, e, e, e, e], [w, w, w], NewCell), printList(NewCell).*/
 
+move(GameState, Move, NewGameState):-
+	movePieces(GameState,Move,NewGameState).
+	
 
-askForMove(Move, GameState):-			/*TODO: should receive valid moves*/
-	get Answer asking 'What stack do you wish to move? (Row-Column)',
+prepCellSource(Cell, NumberOfPiecesToMove, NewCell):- 	
+	removeFirstNElements(NumberOfPiecesToMove, Cell, CellAfter),
+	refillList(CellAfter, NewCell).
+
+prepCellDest(Cell, PiecesToAdd, NewCell):- 
+	append(PiecesToAdd, Cell, TempCell), 
+	length(PiecesToAdd, Len), 
+	removeFromListEnd(Len, TempCell, NewCell).
+
+movePieces(GameState, [X1, Y1, X2, Y2|_], NewGameState):- 			/*TODO: make this the Move predicate instead of having two predicates*/
+	[Board, BlackCubes, WhiteCubes] = GameState,
+	[NewBoard, NewBlackCubes, NewWhiteCubes] = NewGameState,			/*TODO: NÃO É PRECISO TER NEWCUBES*/
+	getMatrixValue(X1, Y1, Board, SourceCell), 
+	getMatrixValue(X2, Y2, Board, DestCell),
+	getDistance(X1, Y1, X2, Y2, Distance),
+	getFirstNElements(Distance, SourceCell, [], PiecesToMove),
+	prepCellSource(SourceCell, Distance, NewSourceCell),
+	prepCellDest(DestCell, PiecesToMove, NewDestCell),
+	replaceInMatrix(Board, X1, Y1, NewSourceCell, TempBoard),
+	replaceInMatrix(TempBoard, X2, Y2, NewDestCell, NewBoard),
+	getTopDisc(PiecesToMove, PlayerColor),
+	updateCubes(BlackCubes, WhiteCubes, NewSourceCell, DestCell, PlayerColor, NewBoard).
+	/*TODO: update new game state*/
+
+updateCubes(BlackCubes, WhiteCubes, NewSourceCell, DestCell, PlayerColor, NewBoard):-
+	getTopPiece(NewSourceCell, LeftPiece),
+	(LeftPiece=='e', PlayerColor == 'b' -> Cube is 'bC', NewBlackCubes is BlackCubes-1; Cube is 'wC', NewWhiteCubes is WhiteCubes-1),						
+	/*TODO: ATUALIZAR newBOARD*/
+
+	/*JUNÇÃO JÁ TINHA CUBO, cubo da já não existe por ter lavado overwrite*/
+	/*BlackWhiteCubes are NewBlackWhiteCubes*/
+	/*leave*/
+																
+/*ask for move (input)*/
+askForMove(Move, GameState):-										/*TODO: should receive valid moves*/
+	get Answer asking 'Where do you want to move the stack? (Row-Column)',
 	split_string(Answer, "-", "", Coords),
 	nth0(0, Coords, NewRow),
 	nth0(1, Coords, NewColumn),
 	nth0(0, Move, Row),
 	nth0(1, Move, Column),
 	nth0(0, GameState, Board),
+	Move is [Column, Row, NewColumn, NewRow | _],					/*CAN i DO THIS?*/
 	validMove([Column, Row, NewColumn, NewRow | _], Board),!.		/*TODO: instead of this, check if it is in list of valid moves*/
 
 askForMove(Move, GameState):-
@@ -28,14 +65,11 @@ askForMove(Move, GameState):-
 	askForMove(Move, GameState).
 
 % Not tested
-validMove([X1, Y1, X2, Y2|_], Board):- 			/*TODO:tem de haver um predicado que vê as valid moves todas e mete numa lista*/
+validMove([X1, Y1, X2, Y2|_], Board):- 								/*TODO:tem de haver um predicado que vê as valid moves todas e mete numa lista*/
 	validCoords(5, 5, X2, Y2),							
 	getMatrixValue(Y1, X1, Board, Value), getNumPiecesInCell(Value, 0, NumPieces),
 	sameRowOrColumn(X1, Y1, X2, Y2),							
 	getDistance(X1, Y1, X2, Y2, Distance), Distance > 0, Distance < 5, Distance =< NumPieces.
-
-
-/* movePieces(Board, Move):- !. */
 
 
 /*ask stack to move*/
@@ -48,7 +82,7 @@ selectStack(Coords, Player, Board):-
 	split_string(Stack, "-", "", Coords),
 	nth0(0, Coords, Row),
 	nth0(1, Coords, Column),
-	checkSelection(Column, Row, Player, Board),!.		/*checking for valid coords and if stack is from the player*/
+	checkSelection(Column, Row, Player, Board),!.					/*checking for valid coords and if stack is from the player*/
 	
 selectStack(Coords, Player, Board):-
 	write('Incorrect Selection.'),nl,
@@ -104,7 +138,7 @@ lineHasNoStacks([H|T], Color):-
 
 
 hasNoStacks(Stack, Color):-			
-	getTopDisc(Stack, Piece), 				/*check for cube or disc*/
+	getTopDisc(Stack, Piece), 									/*check for cube or disc*/
 	\+Piece == Color.	
 																									
 isDisc(T):- T == 'w'.
@@ -115,19 +149,5 @@ getTopDisc(Stack, Piece):-
 	isDisc(Piece).
 
 
-testPrep:- prepCellDest([b, b, b, b, b, b, e, e, e, e, e, e], [w, w, w], NewCell), printList(NewCell).
 
-
-
-prepCellSource(Cell, NumberOfPiecesToMove, NewCell):- 	removeFirstNElements(NumberOfPiecesToMove, Cell, CellAfter),
-														refillList(CellAfter, NewCell).
-prepCellDest(Cell, PiecesToAdd, NewCell):- append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
-
-movePieces(Board, [X1, Y1, X2, Y2|_], NewBoard):- 	getMatrixValue(X1, Y1, Board, SourceCell), getMatrixValue(X2, Y2, Board, DestCell),
-													getDistance(X1, Y1, X2, Y2, Distance),
-													getFirstNElements(Distance, SourceCell, [], PiecesToMove),
-													prepCellSource(SourceCell, Distance, NewSourceCell),
-													prepCellDest(DestCell, PiecesToMove, NewDestCell),
-													replaceInMatrix(Board, X1, Y1, NewSourceCell, TempBoard),
-													replaceInMatrix(TempBoard, X2, Y2, NewDestCell, NewBoard).
 
