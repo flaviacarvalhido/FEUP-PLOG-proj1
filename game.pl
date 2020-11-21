@@ -9,7 +9,7 @@ displayGame(GameState, Player):-
 	nth0(0, GameState, Board),
 	nth0(1, GameState, BlackCubes),
 	nth0(2, GameState, WhiteCubes),
-	displayBoard(Board, 5),
+	displayFullBoard(Board),
 	write(Player), write(' is up next.'),
 	nl,
 	write('Black has '), write(BlackCubes), write(' cubes available to play.'),
@@ -55,4 +55,12 @@ testMove2:- initialBoard(Board), getMatrixValue(0, 0, Board, SourceCell), getMat
 testAllMoves:- initialBoard(Board), getAllValidMoves(Board, Moves, w), write('Printing'), nl, printList(Moves).
 
 testGetNumPieces:- intermediateBoard(Board), getNumPiecesOfColorBoard(Board, b, 0, NumPieces), write(NumPieces).
+
+testAllValidMoves:- initialBoard(Board), getAllValidMoves(Board, Moves), printListOfList(Moves).
+
+testCountCubes:- finalBoard2(Board), countCubesBoard(bC, Board, 0, NumCubes), write(NumCubes).
+
+testSortMoves:- initialBoard(Board), sortMovesByScore(Board, SortedMoves, Color), printList(SortedMoves).
+
+testEvaluate:- initial(GameState), evaluateState(GameState, w, Score), write(Score).
 

@@ -21,7 +21,7 @@ askForMove(Move, GameState):-			/*TODO: should receive valid moves*/
 	nth0(0, Move, Row),
 	nth0(1, Move, Column),
 	nth0(0, GameState, Board),
-	validMove([Column, Row, NewColumn, NewRow | _], Board),!.		/*TODO: instead of this, check if it is in list of valid moves*/
+	validMove([Column, Row, NewColumn, NewRow | _], Board), ! .		/*TODO: instead of this, check if it is in list of valid moves*/
 
 askForMove(Move, GameState):-
 	write('Invalid Move.'),nl,
@@ -29,8 +29,10 @@ askForMove(Move, GameState):-
 
 % Not tested
 validMove([X1, Y1, X2, Y2|_], Board):- 			/*TODO:tem de haver um predicado que vê as valid moves todas e mete numa lista*/
+	(X1 =\= X2; Y1 =\= Y2),
+	validCoords(5, 5, X1, Y1),
 	validCoords(5, 5, X2, Y2),							
-	getMatrixValue(Y1, X1, Board, Value), getNumPiecesInCell(Value, 0, NumPieces),
+	getMatrixValue(Y1, X1, Board, Value), getNumPiecesInCell(Value, 0, NumPieces), !,
 	sameRowOrColumn(X1, Y1, X2, Y2),							
 	getDistance(X1, Y1, X2, Y2, Distance), Distance > 0, Distance < 5, Distance =< NumPieces.
 
@@ -117,7 +119,12 @@ getTopDisc(Stack, Piece):-
 
 testPrep:- prepCellDest([b, b, b, b, b, b, e, e, e, e, e, e], [w, w, w], NewCell), printList(NewCell).
 
+countCubesBoard(_, [], NumCubesCurrent, NumCubesCurrent).
+countCubesBoard(CubeColor, [Head|Tail], NumCubesCurrent, NumCubes):- countCubesRow(CubeColor, Head, 0, NumCubesRow), NumCubesCurrentNew is NumCubesCurrent + NumCubesRow, countCubesBoard(CubeColor, Tail, NumCubesCurrentNew, NumCubes).
 
+countCubesRow(_, [], NumCubesCurrent, NumCubesCurrent).
+countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- getTopPiece(Head, Piece), Piece == CubeColor, !, NumCubesCurrentNew is NumCubesCurrent+1, countCubesRow(CubeColor, Tail, NumCubesCurrentNew, NumCubesFinal).
+countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- countCubesRow(CubeColor, Tail, NumCubesCurrent, NumCubesFinal).
 
 prepCellSource(Cell, NumberOfPiecesToMove, NewCell):- 	removeFirstNElements(NumberOfPiecesToMove, Cell, CellAfter),
 														refillList(CellAfter, NewCell).
