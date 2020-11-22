@@ -26,8 +26,7 @@ getNumPiecesOfColorRow([Head|Tail], Color, StartNum, Num):- getNumPiecesOfColorR
 
 getAllValidMoves(Board, Moves, Color):- setof([X1, Y1, X2, Y2], (between(0, 5, X1), between(0, 5, Y1), between(0, 5, X2), between(0, 5, Y2), isMoveValidColor(Color, [X1, Y1, X2, Y2], Board), validMove([X1, Y1, X2, Y2|_], Board)), Moves).
 
-
-sortMovesByScore(Board, SortedMoves, Color):- 	getAllValidMoves(Board, Moves, Color),
+sortMovesByScore(Board, SortedMoves, Color):-	getAllValidMoves(Board, Moves, Color),
 												getScoreMoves(Moves, [], Scores, Board, Color),
 												mapScoreMoves(Scores, Moves, MappedScoreMoves),
 												sort(MappedScoreMoves, SortedMoves).
@@ -45,13 +44,13 @@ mapScoreMoves([Score|RestScores], [Move|RestMoves], [[Score, Move]| ScoreMoves])
 
 getRandomMove(Moves, ChosenMove):- length(Moves, Len), random(0, Len, Idx), nth0(Idx, Moves, MoveWithScore), nth0(1, MoveWithScore, ChosenMove).
 
-getBestMove(Moves, ChosenMove):- reverse(Moves, BestToWorstMoves), nth0(0, BestToWorstMoves, ChosenMove).
+getBestMove(Moves, ChosenMove):- reverse(Moves, BestToWorstMoves), nth0(0, BestToWorstMoves, MoveWithScore), nth0(1, MoveWithScore, ChosenMove).
 
 valid_moves(GameState, Player, ListOfMoves):- nth0(0, GameState, Board), getAllValidMoves(Board, ListOfMoves, Color).
 
-choose_move(GameState, Player, 0, Move):- 	nth0(0, GameState, Board),
+choose_move(GameState, Player, 1, Move):- 	nth0(0, GameState, Board),
 											sortMovesByScore(Board, Moves, Player),
 											getRandomMove(Moves, Move).
-choose_move(GameState, Player, 1, Move):-	nth0(0, GameState, Board),
+choose_move(GameState, Player, 2, Move):-	nth0(0, GameState, Board),
 											sortMovesByScore(Board, Moves, Player),
 											getBestMove(Moves, Move).

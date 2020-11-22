@@ -3,7 +3,9 @@
 :-include('utils.pl').
 :-include('ai.pl').
 :-include('menus.pl').
+:-include('play_game.pl').
 :- use_module(library(lists)).
+:-use_module(library(system)).
 
 % displays the game
 displayGame(GameState, Player):- 
@@ -61,9 +63,13 @@ testAllValidMoves:- initialBoard(Board), getAllValidMoves(Board, Moves, w), prin
 
 testCountCubes:- finalBoard2(Board), countCubesBoard(bC, Board, 0, NumCubes), write(NumCubes).
 
-testSortMoves:- initialBoard(Board), sortMovesByScore(Board, SortedMoves, Color), printList(SortedMoves).
+testSortMoves:- initialBoard(Board), sortMovesByScore(Board, SortedMoves, w), printList(SortedMoves).
 
 testEvaluate:- initial(GameState), evaluateState(GameState, w, Score), write(Score).
 
-testMapMoves:- initialBoard(Board), sortMovesByScore(Board, SortedMoves, w), getRandomMove(SortedMoves, Move), printList(Move).
+testChooseMove:- initial(GameState), choose_move(GameState, w, 1, Move), printList(Move).
+
+testMoveColor:- initialBoard(Board), isMoveValidColor(w, [2, 0, 0, 1], Board).
+
+testCheckGameOver:- finalBoard1(Board), isGameOver(Board, w).
 

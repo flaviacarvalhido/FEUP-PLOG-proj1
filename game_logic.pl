@@ -37,7 +37,7 @@ validMove([X1, Y1, X2, Y2|_], Board):- 			/*TODO:tem de haver um predicado que v
 	getDistance(X1, Y1, X2, Y2, Distance), Distance > 0, Distance < 5, Distance =< NumPieces.
 
 
-isMoveValidColor(Color, [X1, Y1, X2, Y2|_], Board):- getMatrixValue(X1, Y1, Board, Cell), getTopPiece(Cell, Piece), Piece == Color.
+isMoveValidColor(Color, [X1, Y1, X2, Y2|_], Board):- getMatrixValue(X1, Y1, Board, Cell), getTopPiece(Cell, Piece), !, Piece == Color.
 
 
 /*ask stack to move*/
@@ -101,19 +101,18 @@ isGameOver([H|T], Color):-
 lineHasNoStacks([], _).
 
 lineHasNoStacks([H|T], Color):-
-	hasNoStacks(H, Color),
+	hasNoStacks(H, Color), !,
 	lineHasNoStacks(T, Color).	
 
 
 hasNoStacks(Stack, Color):-			
-	getTopDisc(Stack, Piece), 				/*check for cube or disc*/
+	getTopPiece(Stack, Piece), !, 				/*check for cube or disc*/
 	\+Piece == Color.	
 																									
-isDisc(T):- T == 'w'.
-isDisc(T):- T == 'b'.
+isDisc(T):- T == 'w'; T == 'b'.
 
-getTopDisc(Stack, Piece):-          
-	getTopPiece(Stack, Piece),
+getTopDisc(Stack, Piece):-       
+	getTopPiece(Stack, Piece), !,
 	isDisc(Piece).
 
 
