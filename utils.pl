@@ -71,12 +71,16 @@ removeFirstElement([Head|Tail], Tail).
 testRefill:- refillList([b, b, w, b, b, e], List), printList(List).
 testRemove:- removeFromList(3, [1, 2, 3, 4, 5, 6], NewList), printList(NewList).
 
+decomposeState(GameState, Board, WhiteCubes, BlackCubes):- nth0(0, GameState, Board), nth0(1, GameState, WhiteCubes), nth0(2, GameState, BlackCubes).
+
 
 printList([]):-!.
 printList([Head|Tail]):- 
 	write(Head), 
 	printList(Tail).
 
+printListOfList([]):-!.
+printListOfList([Head|Tail]):- printList(Head), write('  '), printListOfList(Tail).
 
 :- op(800, xfx, asking).
 :- op(900, fx, get).
@@ -84,3 +88,31 @@ printList([Head|Tail]):-
 get Answer asking Question :-
 	write(Question), write(' '),
 	read(Answer).
+
+
+validCoords(Nrows, Ncols, X, Y):- X < Ncols, X >= 0, Y < Nrows, Y >= 0.
+
+sameRowOrColumn(X1, Y1, X2, Y2):- X1 =:= X2; Y1 =:= Y2.
+
+countCubesBoard(_, [], NumCubesCurrent, NumCubesCurrent).
+countCubesBoard(CubeColor, [Head|Tail], NumCubesCurrent, NumCubes):- countCubesRow(CubeColor, Head, 0, NumCubesRow), NumCubesCurrentNew is NumCubesCurrent + NumCubesRow, countCubesBoard(CubeColor, Tail, NumCubesCurrentNew, NumCubes).
+
+countCubesRow(_, [], NumCubesCurrent, NumCubesCurrent).
+countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- getTopPiece(Head, Piece), Piece == CubeColor, !, NumCubesCurrentNew is NumCubesCurrent+1, countCubesRow(CubeColor, Tail, NumCubesCurrentNew, NumCubesFinal).
+countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- countCubesRow(CubeColor, Tail, NumCubesCurrent, NumCubesFinal).
+
+prepCellSource(Cell, NumberOfPiecesToMove, NewCell):- 	
+	removeFirstNElements(NumberOfPiecesToMove, Cell, CellAfter),
+	refillList(CellAfter, NewCell).
+
+prepCellDest(Cell, PiecesToAdd, NewCell):- 
+	append(PiecesToAdd, Cell, TempCell), 
+	length(PiecesToAdd, Len), 
+	removeFromListEnd(Len, TempCell, NewCell).
+
+insertCube(Cell, NewCell, w):- Cell == [e, e, e, e, e, e, e, e, e, e, e, e], !, NewCell = [wC, e, e, e, e, e, e, e, e, e, e, e].
+insertCube(Cell, Cell, w).
+insertCube(Cell, NewCell, b):- Cell == [e, e, e, e, e, e, e, e, e, e, e, e], !, NewCell = [bC, e, e, e, e, e, e, e, e, e, e, e].
+insertCube(Cell, Cell, b).
+
+clearConsole :- write('\33\[2J').

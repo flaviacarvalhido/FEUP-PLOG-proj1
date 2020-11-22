@@ -1,15 +1,17 @@
 :-include('board.pl').
 :-include('game_logic.pl').
-:-include('utils.pl').
 :-include('ai.pl').
+:-include('menus.pl').
 :- use_module(library(lists)).
+:- use_module(library(tcltk)).
+
 
 % displays the game
 displayGame(GameState, Player):- 
 	nth0(0, GameState, Board),
 	nth0(1, GameState, BlackCubes),
 	nth0(2, GameState, WhiteCubes),
-	displayBoard(Board, 5),
+	displayFullBoard(Board),
 	write(Player), write(' is up next.'),
 	nl,
 	write('Black has '), write(BlackCubes), write(' cubes available to play.'),
@@ -25,10 +27,13 @@ play(GameState, Player):-
 	[Board, BlackCubes, WhiteCubes] = GameState,
 	
 	askForPiece(Move, Player, Board),
-	/*TODO:check all valid moves*/
+	/*TODO: check all valid moves*/
 	/*TODO: display valid moves in board*/
-	/*TODO:ask for move (and check if it is in validMoves list)*/
-	/*TODO:make Move a list with [currentCoordinates, newCoordinates]*/
+	askForMove(Move, GameState),
+	write('I stop there'),
+	validMove(Move, Board), 										/*TODO: check if in list of total valid moves*/
+
+	/*TODO: make Move a list with [currentCoordinates, newCoordinates]*/
 	move(GameState, Move, NewGameState),							/*Move -> 0:Row, 1:Column*/
 	[NewBoard, NewBlackCubes, NewWhiteCubes] = NewGameState,
 
@@ -47,15 +52,24 @@ play(GameState, Player):-
 	get 'Y' asking 'Game ended. Do you wish to play again? (Y/N)',
 	play.
 
-	
+%tests
+testValidMove:- initialBoard(Board), validMove([0, 0, 0, 4], Board).
 
-testValidMove:- initialBoard(Board), validMove([0, 0, 1, 0], Board, w).
-
-testMove:- initialBoard(Board), movePieces(Board, [0, 0, 0, 2], NewBoard), displayBoard(NewBoard, 5).
+testMove:- initialBoard(Board), movePieces(Board, [0, 0, 0, 2], NewBoard), displayBoard(NewBoard, 5), movePieces(NewBoard, [0, 2, 0, 4], NewNewBoard), displayBoard(NewNewBoard, 5).
 
 testMove2:- initialBoard(Board), getMatrixValue(0, 0, Board, SourceCell), getMatrixValue(0, 2, Board, DestCell), printList(SourceCell), nl, printList(DestCell).
 
 testAllMoves:- initialBoard(Board), getAllValidMoves(Board, Moves, w), write('Printing'), nl, printList(Moves).
 
 testGetNumPieces:- intermediateBoard(Board), getNumPiecesOfColorBoard(Board, b, 0, NumPieces), write(NumPieces).
+
+testAllValidMoves:- initialBoard(Board), getAllValidMoves(Board, Moves, w), printListOfList(Moves).
+
+testCountCubes:- finalBoard2(Board), countCubesBoard(bC, Board, 0, NumCubes), write(NumCubes).
+
+testSortMoves:- initialBoard(Board), sortMovesByScore(Board, SortedMoves, Color), printList(SortedMoves).
+
+testEvaluate:- initial(GameState), evaluateState(GameState, w, Score), write(Score).
+
+testMapMoves:- initialBoard(Board), sortMovesByScore(Board, SortedMoves, w), getRandomMove(SortedMoves, Move), printList(Move).
 
