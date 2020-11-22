@@ -32,9 +32,9 @@ validMove([X1, Y1, X2, Y2|_], Board):- 			/*TODO:tem de haver um predicado que v
 	(X1 =\= X2; Y1 =\= Y2),
 	validCoords(5, 5, X1, Y1),
 	validCoords(5, 5, X2, Y2),							
-	getMatrixValue(Y1, X1, Board, Value), getNumPiecesInCell(Value, 0, NumPieces), !,
+	getMatrixValue(X1, Y1, Board, Value), getNumPiecesInCell(Value, 0, NumPieces), !,
 	sameRowOrColumn(X1, Y1, X2, Y2),							
-	getDistance(X1, Y1, X2, Y2, Distance), Distance > 0, Distance < 5, Distance =< NumPieces.
+	getDistance(X1, Y1, X2, Y2, Distance), !, Distance > 0, Distance < 5, Distance =< NumPieces.
 
 
 isMoveValidColor(Color, [X1, Y1, X2, Y2|_], Board):- getMatrixValue(X1, Y1, Board, Cell), getTopPiece(Cell, Piece), !, Piece == Color.
