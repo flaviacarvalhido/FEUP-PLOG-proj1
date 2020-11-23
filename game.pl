@@ -73,7 +73,7 @@ testMoveColor:- initialBoard(Board), isMoveValidColor(w, [2, 0, 0, 1], Board).
 
 testCheckGameOver:- finalBoard1(Board), isGameOver(Board, w).
 
-testMoves:- testBoard(Board), GameState=[Board, -1, -1], choose_move(GameState, b, 2, Move), write(Move).
+testMoves:- testBoard(Board), GameState=[Board, 4, 4], choose_move(GameState, b, 2, Move), write(Move).
 
 
 % validMove([4, 2, 4, 1], Board), isMoveValidColor(b, [4, 2, 4, 1], Board).
