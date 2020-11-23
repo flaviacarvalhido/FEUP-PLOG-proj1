@@ -128,6 +128,8 @@ countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- countCub
 prepCellSource(Cell, NumberOfPiecesToMove, NewCell):- 	removeFirstNElements(NumberOfPiecesToMove, Cell, CellAfter),
 														refillList(CellAfter, NewCell).
 
+prepCellDest([wC, e, e, e, e, e, e, e, e, e, e, e], PiecesToAdd, NewCell):- Cell = [e, e, e, e, e, e, e, e, e, e, e, e], append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
+prepCellDest([bC, e, e, e, e, e, e, e, e, e, e, e], PiecesToAdd, NewCell):- Cell = [e, e, e, e, e, e, e, e, e, e, e, e], append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
 prepCellDest(Cell, PiecesToAdd, NewCell):- append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
 
 insertCube(Cell, NewCell, w):- Cell == [e, e, e, e, e, e, e, e, e, e, e, e], !, NewCell = [wC, e, e, e, e, e, e, e, e, e, e, e].
@@ -147,7 +149,9 @@ movePieces(Board, [X1, Y1, X2, Y2|_], NewBoard):- 	getMatrixValue(X1, Y1, Board,
 
 move(GameState, Move, NewGameState):- 	nth0(0, GameState, Board),
 										movePieces(Board, Move, NewBoard),
-										countCubesBoard(b, NewBoard, 0, BlackCubes),
-										countCubesBoard(w, NewBoard, 0, WhiteCubes),
-										NewGameState = [NewBoard, BlackCubes, WhiteCubes].
+										countCubesBoard(bC, NewBoard, 0, BlackCubes),
+										countCubesBoard(wC, NewBoard, 0, WhiteCubes),
+										ActualBlackCubes is 9 - BlackCubes,
+										ActualWhiteCubes is 9 - WhiteCubes,
+										NewGameState = [NewBoard, ActualBlackCubes, ActualWhiteCubes].
 
