@@ -6,8 +6,14 @@
 
 
 % Numero de peças pertencentes ao jogador
-evaluateState(GameState, w, Score):- decomposeState(GameState, Board, WhiteCubes, BlackCubes), getNumPiecesOfColorBoard(Board, w, 0, NumPieces), Score is NumPieces + 9 - WhiteCubes - (9-BlackCubes).
-evaluateState(GameState, b, Score):- decomposeState(GameState, Board, WhiteCubes, BlackCubes), getNumPiecesOfColorBoard(Board, b, 0, NumPieces), Score is NumPieces + 9 - BlackCubes - (9-WhiteCubes).
+evaluateState(GameState, w, Score):- 	decomposeState(GameState, Board, WhiteCubes, BlackCubes),
+										getNumPiecesOfColorBoard(Board, w, 0, NumPiecesWhite),
+										getNumPiecesOfColorBoard(Board, b, 0, NumPiecesBlack),
+										Score is NumPiecesWhite - NumPiecesBlack + 9 - WhiteCubes - (9-BlackCubes).
+evaluateState(GameState, b, Score):-	decomposeState(GameState, Board, WhiteCubes, BlackCubes),
+										getNumPiecesOfColorBoard(Board, b, 0, NumPiecesBlack),
+										getNumPiecesOfColorBoard(Board, w, 0, NumPiecesWhite),
+										Score is NumPiecesBlack - NumPiecesWhite + 9 - BlackCubes - (9-WhiteCubes).
 
 value(GameState, Player, Value):- evaluateState(GameState, Player, Value).
 
@@ -30,8 +36,9 @@ sortMovesByScore(Board, SortedMoves, Color):-	write('Going to get all moves'), n
 												getAllValidMoves(Board, Moves, Color),
 												write('Got All Valid Moves: '), write(Moves), nl,
 												getScoreMoves(Moves, [], Scores, Board, Color),
-												write('Got Scores: '), write(Scores),  nl,
-												mapScoreMoves(Scores, Moves, MappedScoreMoves),
+												reverse(Scores, NewScores),
+												write('Got Scores: '), write(NewScores),  nl,
+												mapScoreMoves(NewScores, Moves, MappedScoreMoves),
 												write('Mapped scores and moves: '), write(MappedScoreMoves), nl,
 												sort(MappedScoreMoves, SortedMoves), write('Sorted: '), write(SortedMoves), nl.
 

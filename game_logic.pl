@@ -9,8 +9,10 @@ sameRowOrColumn(X1, Y1, X2, Y2):- X1 =:= X2; Y1 =:= Y2.
 
 /*move*/
 %move(GameState, Move, NewGameState):-
-	/*TODO*/
+/*TODO*/
 
+readCoord(Coord, x):- write('X inicial:'), read(Coord), nl, evaluate(Coord).
+readCoord(Coord, x):- readCoord(Coord, x).
 
 
 askForMove(Move, GameState):-			/*TODO: should receive valid moves*/
@@ -78,8 +80,8 @@ checkWinner(Player, NewGameState):-
 	isWinner(Player, NewGameState),
 	(Player=='Black'-> write('Black is the winner.'), nl; write('White is the winner.'), nl).
 
-isWinner(Player, NewGameState):- Player=='Black', nth0(1, NewGameState, BlackCubes), BlackCubes==0.
-isWinner(Player, NewGameState):- Player=='White', nth0(2, NewGameState, WhiteCubes), WhiteCubes==0.
+isWinner(Player, NewGameState):- Player=='Black', nth0(1, NewGameState, BlackCubes), BlackCubes=<0.
+isWinner(Player, NewGameState):- Player=='White', nth0(2, NewGameState, WhiteCubes), WhiteCubes=<0.
 
 /*game over condition*/
 % checkGameOver(BoardState, Color)

@@ -62,8 +62,8 @@ playGameComputerVsPlayer(GameState, BotDiff):-	displayGame(GameState, 'White'),
 												\+checkWinner('Black', FinalGameState),
 												!, playGameComputerVsPlayer(FinalGameState, BotDiff).
 
-playGameComputerVsComputer(Bot1Diff, Bot2Diff):- initial(GameState), playGameComputerVsComputer(GameState, Bot1Diff, Bot2Diff).
-playGameComputerVsComputer(GameState, Bot1Diff, Bot2Diff):-	displayGame(GameState, 'White'),
+playGameComputerVsComputer(Bot1Diff, Bot2Diff):- initial(GameState), gameLoopComputerVsComputer(GameState, Bot1Diff, Bot2Diff), write('Game End------------------------------------------------------'), nl.
+gameLoopComputerVsComputer(GameState, Bot1Diff, Bot2Diff):-	displayGame(GameState, 'White'),
 															write('Displayed'), nl,
 															sleep(1),
 															write('Slept'), nl,
@@ -72,6 +72,7 @@ playGameComputerVsComputer(GameState, Bot1Diff, Bot2Diff):-	displayGame(GameStat
 															move(GameState, Bot1Move, NewGameState),
 															write('Pieces moved'), nl,
 															decomposeState(NewGameState, NewBoard, _, _),
+															!,
 															write('Decomposed'), nl,
 															\+checkGameOver(NewBoard, b),
 															write('Game OverChecked'), nl,
@@ -86,9 +87,10 @@ playGameComputerVsComputer(GameState, Bot1Diff, Bot2Diff):-	displayGame(GameStat
 															move(NewGameState, Bot2Move, FinalGameState),
 															write('Pieces moved'), nl,
 															decomposeState(FinalGameState, FinalBoard, _, _),
+															!,
 															write('Decomposed'), nl,
 															\+checkGameOver(FinalBoard, w),
 															write('Game Over Checked'), nl,
 															\+checkWinner('Black', FinalGameState),
 															write('Winner checked'), nl,
-															!, playGameComputerVsComputer(FinalGameState, Bot1Diff, Bot2Diff).
+															!, gameLoopComputerVsComputer(FinalGameState, Bot1Diff, Bot2Diff).
