@@ -49,6 +49,10 @@ play(GameState, Player):-
 	get 'Y' asking 'Game ended. Do you wish to play again? (Y/N)',
 	play.
 
+testInput:- testBoard(Board), GameState = [Board, 9, 9], displayGame(GameState, 'Black'), askForPlayerInput(Move, 'Black', GameState).
+
+testGet:- testBoard(Board), displayBoard(Board, 5), checkSelection(0, 4, 'Black', Board).
+
 testValidMove:- initialBoard(Board), validMove([0, 0, 0, 4], Board).
 
 testMove:- initialBoard(Board), movePieces(Board, [0, 0, 0, 2], NewBoard), displayBoard(NewBoard, 5), movePieces(NewBoard, [0, 2, 0, 4], NewNewBoard), displayBoard(NewNewBoard, 5).
