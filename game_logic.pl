@@ -50,13 +50,11 @@ selectStack(Coords, Player, Board):-
 	selectStack(Coords, Player, Board).
 
 checkSelection(Column, Row, Player, Board):-
-	write('false here'),		
-	validCoords(5, 5, Column-1, Row-1),
-	write('false there'),
-	getMatrixValue(Row-1, Column-1, Board, Stack),
-	write('false there there'), 
+	RowIndex is Row-1,
+	ColumnIndex is Column-1,
+	validCoords(5, 5, ColumnIndex, RowIndex),
+	getMatrixValue(RowIndex, ColumnIndex, Board, Stack),
 	checkPlayerColor(Player, Color),
-	write('false there there there'),
 	\+hasNoStacks(Stack, Color).
 
 
@@ -139,18 +137,17 @@ isGameOver([H|T], Color):-
 lineHasNoStacks([], _).
 
 lineHasNoStacks([H|T], Color):-
-	hasNoStacks(H, Color),
+	hasNoStacks(H, Color), !,
 	lineHasNoStacks(T, Color).	
 
 
 hasNoStacks(Stack, Color):-			
-	getTopDisc(Stack, Piece), 									/*check for cube or disc*/
+	getTopPiece(Stack, Piece), !, 				/*check for cube or disc*/
 	\+Piece == Color.	
 																									
-isDisc(T):- T == 'w'.
-isDisc(T):- T == 'b'.
+isDisc(T):- T == 'w'; T == 'b'.
 
-getTopDisc(Stack, Piece):-          
-	getTopPiece(Stack, Piece),
+getTopDisc(Stack, Piece):-       
+	getTopPiece(Stack, Piece), !,
 	isDisc(Piece).
 

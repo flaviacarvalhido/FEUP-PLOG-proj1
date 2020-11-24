@@ -71,7 +71,7 @@ removeFirstElement([Head|Tail], Tail).
 testRefill:- refillList([b, b, w, b, b, e], List), printList(List).
 testRemove:- removeFromList(3, [1, 2, 3, 4, 5, 6], NewList), printList(NewList).
 
-decomposeState(GameState, Board, WhiteCubes, BlackCubes):- nth0(0, GameState, Board), nth0(1, GameState, WhiteCubes), nth0(2, GameState, BlackCubes).
+decomposeState(GameState, Board, WhiteCubes, BlackCubes):- nth0(0, GameState, Board), nth0(2, GameState, WhiteCubes), nth0(1, GameState, BlackCubes).
 
 
 printList([]):-!.
