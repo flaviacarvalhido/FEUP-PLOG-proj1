@@ -14,7 +14,7 @@ displayGame(GameState, Player):-
 	nl,
 	write('Black has '), write(BlackCubes), write(' cubes available to play.'),
 	nl,
-	write('White has '), write(WhiteCubes), write(' cubes available to play.').
+	write('White has '), write(WhiteCubes), write(' cubes available to play.'), nl.
 
 
 % starting point predicate
@@ -73,4 +73,9 @@ testChooseMove:- initial(GameState), choose_move(GameState, w, 1, Move), printLi
 testMoveColor:- initialBoard(Board), isMoveValidColor(w, [2, 0, 0, 1], Board).
 
 testCheckGameOver:- finalBoard1(Board), isGameOver(Board, w).
+
+testMoves:- testBoard(Board), GameState=[Board, 4, 4], displayGame(GameState, 'White'), move(GameState, [4, 3, 4, 4], NewGameState), displayGame(NewGameState, 'Black').
+
+
+% validMove([4, 2, 4, 1], Board), isMoveValidColor(b, [4, 2, 4, 1], Board).
 

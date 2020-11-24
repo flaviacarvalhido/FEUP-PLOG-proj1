@@ -21,12 +21,16 @@ getNumPiecesOfColorRow([Head|Tail], Color, StartNum, Num):- getTopPiece(Head, Pi
 															getNumPiecesOfColorRow(Tail, Color, StartNumNew, Num).
 getNumPiecesOfColorRow([Head|Tail], Color, StartNum, Num):- getNumPiecesOfColorRow(Tail, Color, StartNum, Num).
 
-getAllValidMoves(Board, Moves, Color):- setof([X1, Y1, X2, Y2], (between(0, 5, X1), between(0, 5, Y1), between(0, 5, X2), between(0, 5, Y2), isMoveValidColor(Color, [X1, Y1, X2, Y2], Board), validMove([X1, Y1, X2, Y2|_], Board)), Moves).
+getAllValidMoves(Board, Moves, Color):- write('Before setof'), nl,setof([X1, Y1, X2, Y2], (between(0, 4, X1), between(0, 4, Y1), between(0, 4, X2), between(0, 4, Y2), isMoveValidColor(Color, [X1, Y1, X2, Y2], Board), validMove([X1, Y1, X2, Y2|_], Board)), Moves), write('After setof'), nl.
 
-sortMovesByScore(Board, SortedMoves, Color):-	getAllValidMoves(Board, Moves, Color),
+sortMovesByScore(Board, SortedMoves, Color):-	write('Going to get all moves'), nl,
+												getAllValidMoves(Board, Moves, Color),
+												write('Got All Valid Moves: '), write(Moves), nl,
 												getScoreMoves(Moves, [], Scores, Board, Color),
+												write('Got Scores: '), write(Scores),  nl,
 												mapScoreMoves(Scores, Moves, MappedScoreMoves),
-												sort(MappedScoreMoves, SortedMoves).
+												write('Mapped scores and moves: '), write(MappedScoreMoves), nl,
+												sort(MappedScoreMoves, SortedMoves), write('Sorted: '), write(SortedMoves), nl.
 
 getScoreMoves([], Scores, Scores, _, _).
 getScoreMoves([Move|MovesTail], Scores, FinalScores, Board, Color):-
@@ -46,8 +50,14 @@ getBestMove(Moves, ChosenMove):- reverse(Moves, BestToWorstMoves), nth0(0, BestT
 valid_moves(GameState, Player, ListOfMoves):- nth0(0, GameState, Board), getAllValidMoves(Board, ListOfMoves, Color).
 
 choose_move(GameState, Player, 1, Move):- 	nth0(0, GameState, Board),
+											write('Got Board'), nl,
 											sortMovesByScore(Board, Moves, Player),
-											getRandomMove(Moves, Move).
+											write('Sorted Moves: '), nl,
+											write(Moves), nl,
+											getRandomMove(Moves, Move), write('Got Move: '), write(Move), nl.
 choose_move(GameState, Player, 2, Move):-	nth0(0, GameState, Board),
+											write('Got Board'), nl,
 											sortMovesByScore(Board, Moves, Player),
-											getBestMove(Moves, Move).
+											write('Sorted Moves: '), nl,
+											write(Moves), nl,
+											getBestMove(Moves, Move), write(Move), nl.
