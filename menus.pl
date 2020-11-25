@@ -115,17 +115,16 @@ displayBot2DifficultyMenu:-
 							write('|                                                                                                            |'), nl,
 							write(' ____________________________________________________________________________________________________________ '), nl.
 
-mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   : '), read(UserChoice), handleChoice(UserChoice).
+mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   : '), getInputAndValidate(0, 4, UserChoice), handleChoice(UserChoice).
 
-botDifficultyMenu(BotDiff):- clearConsole, displayBotDifficultyMenu, nl, write('Your choice :  '), read(UserChoice), BotDiff = UserChoice.
+botDifficultyMenu(BotDiff):- clearConsole, displayBotDifficultyMenu, nl, getInputAndValidate(1, 2, BotDiff).
 
-bot1DifficultyMenu(Bot1Diff):- clearConsole, displayBot1DifficultyMenu, nl, write('Your choice :  '), read(UserChoice), Bot1Diff = UserChoice.
+bot1DifficultyMenu(Bot1Diff):- clearConsole, displayBot1DifficultyMenu, nl, getInputAndValidate(1, 2, Bot1Diff).
 
-bot2DifficultyMenu(Bot2Diff):- clearConsole, displayBot2DifficultyMenu, nl, write('Your choice :  '), read(UserChoice), Bot2Diff = UserChoice.
+bot2DifficultyMenu(Bot2Diff):- clearConsole, displayBot2DifficultyMenu, nl, getInputAndValidate(1, 2, Bot2Diff).
 
 handleChoice(0):- write('It''s a shame you don''t want to play anymore. Quitting...').
-handleChoice(1):- !.
-handleChoice(2):- botDifficultyMenu(BotLevel).
-handleChoice(3):- botDifficultyMenu(BotLevel).
-handleChoice(4):- bot1DifficultyMenu(Bot1Level), bot2DifficultyMenu(Bot2Level).
-handleChoice(_):- write("Invalid Option!"), nl.
+handleChoice(1):- playGamePlayerVsPlayer.
+handleChoice(2):- botDifficultyMenu(BotLevel), playGamePlayerVsComputer(BotLevel).
+handleChoice(3):- botDifficultyMenu(BotLevel), playGameComputerVsPlayer(BotLevel).
+handleChoice(4):- bot1DifficultyMenu(Bot1Level), bot2DifficultyMenu(Bot2Level), playGameComputerVsComputer(Bot1Level, Bot2Level).

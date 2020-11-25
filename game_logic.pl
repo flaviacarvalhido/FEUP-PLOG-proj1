@@ -70,7 +70,7 @@ checkPlayerColor(Player, Color):- Player=='White', Color='w'.
 /*winner condition*/
 
 checkWinner(Player, NewGameState):-
-	isWinner(Player, NewGameState),
+	isWinner(Player, NewGameState), !,
 	(Player=='Black'-> write('Black is the winner.'), nl; write('White is the winner.'), nl).
 
 isWinner(Player, NewGameState):- Player=='Black', nth0(1, NewGameState, BlackCubes), BlackCubes==0.
@@ -80,7 +80,7 @@ isWinner(Player, NewGameState):- Player=='White', nth0(2, NewGameState, WhiteCub
 % checkGameOver(BoardState, Color)
 
 checkGameOver(Board, Color):-
-	isGameOver(Board, Color),
+	isGameOver(Board, Color), !,
 	(Color == 'w' -> write('Black is the winner.'), nl; write('White is the winner.'), nl).
 	
 

@@ -1,4 +1,5 @@
 :- use_module(library(lists)).
+:- use_module(library(between)).
 
 test_get:- 
         get_matrix_value(2, 1, [[1, 2, 3], [4, 5, 6], [7, 8, 9]], Res).
@@ -25,20 +26,22 @@ getDistance(X1, Y1, X2, Y2, Distance):-
 addToList(ListToAdd, TargetList, NewList):- 
 	append(ListToAdd, TargetList, NewList).
 
+getInputAndValidate(Low, High, Input):- get Input asking 'Your choice: ',
+										between(Low, High, Input).
+%getInputAndValidate(Low, High, Input):- write('Invalid Choice, please insert again.'), nl, getInputAndValidate(Low, High, Input).
 
+replaceInList([_|Tail], 0, ValueToReplace, [ValueToReplace|Tail]).
+replaceInList([Head|Tail], IndexToReplace, ValueToReplace, [Head|NewTail]) :-
+	IndexToReplace > 0,
+	NewIndexToReplace is IndexToReplace - 1,
+	replaceInList(Tail, NewIndexToReplace, ValueToReplace, NewTail).
 
-replaceInList([_H|T], 0, Value, [Value|T]).
-replaceInList([H|T], Index, Value, [H|TNew]) :-
-	Index > 0,
-	Index1 is Index - 1,
-	replaceInList(T, Index1, Value, TNew).
-
-replaceInMatrix([H|T], 0, Column,Value, [HNew|T]) :-
-        replaceInList(H, Column, Value, HNew).
-replaceInMatrix([H|T], Row, Column, Value, [H|TNew]) :-
+replaceInMatrix([Head|Tail], 0, Column, ValueToReplace, [NewHead|Tail]) :-
+        replaceInList(Head, Column, ValueToReplace, NewHead).
+replaceInMatrix([Head|Tail], Row, Column, ValueToReplace, [Head|NewTail]) :-
 	Row > 0,
-	Row1 is Row - 1,
-	replaceInMatrix(T, Row1, Column, Value, TNew).
+	NewRow is Row - 1,
+	replaceInMatrix(Tail, NewRow, Column, ValueToReplace, NewTail).
 
 
 replace([H|T], 0, Row, Column, Value, [HNew|T]):- 
@@ -86,7 +89,7 @@ printListOfList([Head|Tail]):- printList(Head), write('  '), printListOfList(Tai
 :- op(900, fx, get).
 
 get Answer asking Question :-
-	write(Question), write(' '),
+	write(Question), write(' '), nl,
 	read(Answer).
 
 clearConsole :- write('\33\[2J').
