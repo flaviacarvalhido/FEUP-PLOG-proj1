@@ -125,13 +125,13 @@ intermediateState(
 testDisplay:- initialBoard(Board), displayFullBoard(Board).
 testWrite:- format(' er ~|~s~t~50|~|   er~n', ['b b b']).
 
-displayFullBoard(Board):- write('|            1                         2                           3                           4                           5             |'), nl, displayBoard(Board, 5).
+displayFullBoard(Board):- write('|            0                         1                           2                           3                           4             |'), nl, displayBoard(Board, 0).
 
 % displays the board
 displayBoard([], _).
 displayBoard([L|[]], N):- displayLine(L, 5, N), displayBorderHorizontal, nl.
-displayBoard([L|T], N):- N =:= 5, !, N1 is N-1, displayBorderHorizontal, nl, displayIntermediateLineEmpty, nl, displayLine(L, 5, N), displayIntermediateLineEmpty, nl, displayIntermediateLine, nl, displayIntermediateLine, nl, displayIntermediateLineEmpty, nl, displayBoard(T, N1).
-displayBoard([L|T], N):- N1 is N-1, displayIntermediateLineEmpty, nl, displayLine(L, 5, N), displayIntermediateLine, nl, displayIntermediateLine, nl, displayIntermediateLineEmpty, nl, displayBoard(T, N1).
+displayBoard([L|T], N):- N =:= 0, !, N1 is N+1, displayBorderHorizontal, nl, displayIntermediateLineEmpty, nl, displayLine(L, 5, N), displayIntermediateLineEmpty, nl, displayIntermediateLine, nl, displayIntermediateLine, nl, displayIntermediateLineEmpty, nl, displayBoard(T, N1).
+displayBoard([L|T], N):- N1 is N+1, displayIntermediateLineEmpty, nl, displayLine(L, 5, N), displayIntermediateLine, nl, displayIntermediateLine, nl, displayIntermediateLineEmpty, nl, displayBoard(T, N1).
 
 % displays a line for the board aesthetics
 displayIntermediateLineEmpty:- write('|                                                                                                                                        |').

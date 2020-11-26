@@ -7,7 +7,11 @@
 :- use_module(library(lists)).
 :-use_module(library(system)).
 
-% displays the game
+/* displayGame(+GameState, +Player)
+ *
+ * Displays the received GameState
+ *
+ */
 displayGame(GameState, Player):- 
 	nth0(0, GameState, Board),
 	nth0(1, GameState, BlackCubes),
@@ -21,33 +25,9 @@ displayGame(GameState, Player):-
 
 
 % starting point predicate
-play:- 	initial(GameState), play(GameState, 'Black').
+play:- 	mainMenu ; true.
 
-play(GameState, Player):-
-	displayGame(GameState, Player),
-	[Board, BlackCubes, WhiteCubes] = GameState,
-	
-	askForPiece(Move, Player, Board),
-	/*TODO:check all valid moves*/
-	/*TODO:ask for move (and check if it is in validMoves list)*/
-	/*TODO:make Move a list with [currentCoordinates, newCoordinates]*/
-	move(GameState, Move, NewGameState),							/*Move -> 0:Row, 1:Column*/
-	[NewBoard, NewBlackCubes, NewWhiteCubes] = NewGameState,
-
-	checkPlayerColor(Player, Color),
-
-	\+checkGameOver(NewBoard, Color),				%this exits loop when game is over, goes to play again
-	\+checkWinner(Player, NewGameState),		
-
-
-	nextPlayer(Player, Next),
-	play(NewGameState, Next).
-
-
-play(GameState, Player):-
-	/*play again*/
-	get 'Y' asking 'Game ended. Do you wish to play again? (Y/N)',
-	play.
+% Tests
 
 testInput:- testBoard(Board), GameState = [Board, 9, 9], displayGame(GameState, 'Black'), askForPlayerInput(Move, 'Black', GameState).
 

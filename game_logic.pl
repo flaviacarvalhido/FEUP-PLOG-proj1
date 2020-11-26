@@ -1,58 +1,90 @@
 :- use_module(library(lists)).
-:-include('utils.pl').
+:- include('utils.pl').
+:- include('menus.pl').
 
-
+/*
+ * validCoords(+Nrows, +Ncols, +X, +Y)
+ *
+ * Succeeds if X in in the interval [0, Nrows[ and Y in the interval [0, Ncols[, fails otherwise
+ *
+ */
 validCoords(Nrows, Ncols, X, Y):- X < Ncols, X >= 0, Y < Nrows, Y >= 0.
 
+/*
+ * sameRowOrColumn(+X1, +Y1, +X2, +Y2)
+ *
+ * Succeeds if coordinates (X1, Y1) and (X2, Y2) are in the same row or column of the board
+ *
+ */
 sameRowOrColumn(X1, Y1, X2, Y2):- X1 =:= X2; Y1 =:= Y2.
 
+/*
+ * askForPiece(-Move, +Player, +Board)
+ *
+ * Asks the player for input regarding the stack he wishes to move and validates it. The validated input is returned in Move.
+ *
+ */
 askForPiece(Move, Player, Board):-
 	selectStack(Coords, Player, Board),
 	Move = Coords.
 
+/*
+ * selectStack(-Coords, +Player, +Board)
+ *
+ * Asks the player for input regarding the stack he wishes to move and validates it. The position of the selected stack is returned in Coords.
+ *
+ */
 selectStack(Coords, Player, Board):-
-	get StackRow asking 'Select the stack you wish to move: Row? ',
-	get StackColumn asking 'Column? ', nl, !,
+	get StackRow asking 'Select the stack you wish to move: X? ',
+	get StackColumn asking 'Y? ', nl, !,
 	Coords = [StackColumn, StackRow],
-	checkSelection(StackColumn, StackRow, Player, Board).					/*checking for valid coords and if stack is from the player*/
-	
+	checkSelection(StackColumn, StackRow, Player, Board).
 selectStack(Coords, Player, Board):-
 	write('Incorrect Selection.'), nl,
 	selectStack(Coords, Player, Board).
 
+/*
+ * checkSelection(+Column, +Row, +Player, +Board)
+ *
+ * Succeeds if the coordinates (Column, Row) represent a valid stack for the player Player.
+ *
+ */
 checkSelection(Column, Row, Player, Board):-
-	write('Row: '), write(Row), write('     Column: '), write(Column), nl,
 	validCoords(5, 5, Column, Row),
 	getMatrixValue(Column, Row, Board, Stack), !,
-	write('Matrix Value: '), write(Stack), nl,
 	checkPlayerColor(Player, Color),
 	\+hasNoStacks(Stack, Color).
 
+/*
+ * askForPlayerInput(-Move, +Player, +GameState)
+ *
+ * Asks the player for input regarding the stack he wishes to move and the position he wants to move it to and validates both. The move inserted by the player is returned in Move.
+ *
+ */
 askForPlayerInput(Move, Player, GameState):-	nth0(0, GameState, Board),
 												askForPiece(SourcePos, Player, Board),
 												!, askForMove(SourcePos, GameState, Move), !, write(Move).
 
 /*ask for move (input)*/
-askForMove(InitialPos, GameState, Move):-										/*TODO: should receive valid moves*/
-	get DestRow asking 'Select the position you wish to move to. Row? ',
-	get DestColumn asking 'Column? ', nl,
+askForMove(InitialPos, GameState, Move):-
+	get DestRow asking 'Select the position you wish to move to. X? ',
+	get DestColumn asking 'Y? ', nl,
 	Coords = [DestColumn, DestRow],
 	nth0(0, GameState, Board),
 	append(InitialPos, Coords, Move),
 	write(Move), nl, !,
-	validMove(Move, Board).		/*TODO: instead of this, check if it is in list of valid moves*/
+	validMove(Move, Board).
 
 askForMove(InitialPos, GameState, Move):-
 	write('Invalid Move.'), nl,
 	askForMove(InitialPos, GameState, Move).
 
 
-% Not tested
-validMove([X1, Y1, X2, Y2|_], Board):- 			/*TODO:tem de haver um predicado que vê as valid moves todas e mete numa lista*/
+validMove([X1, Y1, X2, Y2|_], Board):-
 	(X1 =\= X2; Y1 =\= Y2),
 	validCoords(5, 5, X1, Y1),
 	validCoords(5, 5, X2, Y2),							
-	getMatrixValue(X1, Y1, Board, Value), write('Matrix Value: '), write(Value), nl, getNumPiecesInCell(Value, 0, NumPieces), !,
+	getMatrixValue(X1, Y1, Board, Value), getNumPiecesInCell(Value, 0, NumPieces), !,
 	sameRowOrColumn(X1, Y1, X2, Y2),							
 	getDistance(X1, Y1, X2, Y2, Distance), !, Distance > 0, Distance < 5, Distance =< NumPieces.
 
@@ -71,7 +103,7 @@ checkPlayerColor(Player, Color):- Player=='White', Color='w'.
 
 checkWinner(Player, NewGameState):-
 	isWinner(Player, NewGameState), !,
-	(Player=='Black'-> write('Black is the winner.'), nl; write('White is the winner.'), nl).
+	(Player=='Black'-> (sleep(1), clearConsole, displayGameOverMessageBlack, sleep(2), nl); (sleep(1), clearConsole, displayGameOverMessageWhite, sleep(2), nl)).
 
 isWinner(Player, NewGameState):- Player=='Black', nth0(1, NewGameState, BlackCubes), BlackCubes==0.
 isWinner(Player, NewGameState):- Player=='White', nth0(2, NewGameState, WhiteCubes), WhiteCubes==0.
@@ -81,7 +113,7 @@ isWinner(Player, NewGameState):- Player=='White', nth0(2, NewGameState, WhiteCub
 
 checkGameOver(Board, Color):-
 	isGameOver(Board, Color), !,
-	(Color == 'w' -> write('Black is the winner.'), nl; write('White is the winner.'), nl).
+	(Color == 'w' -> (sleep(1), clearConsole, displayGameOverMessageBlack, sleep(2), nl); (sleep(1), clearConsole, displayGameOverMessageWhite, sleep(2), nl)).
 	
 
 isGameOver([], _).
@@ -139,8 +171,8 @@ movePieces(Board, [X1, Y1, X2, Y2|_], NewBoard):- 	getMatrixValue(X1, Y1, Board,
 													prepCellDest(DestCell, PiecesToMove, NewDestCell),
 													getTopPiece(SourceCell, TopPiece),
 													insertCube(TempSourceCell, NewSourceCell, TopPiece),
-													replaceInMatrix(Board, X1, Y1, NewSourceCell, TempBoard),
-													replaceInMatrix(TempBoard, X2, Y2, NewDestCell, NewBoard).
+													replaceInBoard(Board, X1, Y1, NewSourceCell, TempBoard),
+													replaceInBoard(TempBoard, X2, Y2, NewDestCell, NewBoard).
 
 move(GameState, Move, NewGameState):- 	nth0(0, GameState, Board),
 										movePieces(Board, Move, NewBoard),
