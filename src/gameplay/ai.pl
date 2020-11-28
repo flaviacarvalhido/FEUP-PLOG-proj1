@@ -135,4 +135,8 @@ choose_move(GameState, Player, 1, Move):- 	nth0(0, GameState, Board),
 											getRandomMove(Moves, Move).
 choose_move(GameState, Player, 2, Move):-	nth0(0, GameState, Board),
 											sortMovesByScore(Board, Moves, Player),
+											getFirstNElements(5, Moves, [], Elements),
+											getRandomMove(Elements, Move).
+choose_move(GameState, Player, 3, Move):-	nth0(0, GameState, Board),
+											sortMovesByScore(Board, Moves, Player),
 											getBestMove(Moves, Move).

@@ -112,8 +112,8 @@ displayBotDifficultyMenu:-
 							write('|                                      Choose Bot Difficulty                                                 |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                            1 - Easy                                                        |'), nl,
-							write('|                                            2 - Hard                                                        |'), nl,
-							write('|                                                                                                            |'), nl,
+							write('|                                            2 - Medium                                                      |'), nl,
+							write('|                                            3 - Hard                                                        |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                                                                                            |'), nl,
@@ -147,8 +147,8 @@ displayBot1DifficultyMenu:-
 							write('|                                      Choose Bot 1 Difficulty                                               |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                            1 - Easy                                                        |'), nl,
-							write('|                                            2 - Hard                                                        |'), nl,
-							write('|                                                                                                            |'), nl,
+							write('|                                            2 - Medium                                                      |'), nl,
+							write('|                                            3 - Hard                                                        |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                                                                                            |'), nl,
@@ -182,8 +182,8 @@ displayBot2DifficultyMenu:-
 							write('|                                      Choose Bot 2 Difficulty                                               |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                            1 - Easy                                                        |'), nl,
-							write('|                                            2 - Hard                                                        |'), nl,
-							write('|                                                                                                            |'), nl,
+							write('|                                            2 - Medium                                                      |'), nl,
+							write('|                                            3 - Hard                                                        |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                                                                                            |'), nl,
 							write('|                                                                                                            |'), nl,
@@ -206,7 +206,7 @@ mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   :
  * Displays the bot difficulty menu and handles user input
  *
  */
-botDifficultyMenu(BotDiff):- clearConsole, displayBotDifficultyMenu, nl, getInputAndValidate(1, 2, BotDiff).
+botDifficultyMenu(BotDiff):- clearConsole, displayBotDifficultyMenu, nl, getInputAndValidate(1, 3, BotDiff).
 
 /*
  * bot1DifficultyMenu/0
@@ -214,7 +214,7 @@ botDifficultyMenu(BotDiff):- clearConsole, displayBotDifficultyMenu, nl, getInpu
  * Displays the bot 1 difficulty menu and handles user input
  *
  */
-bot1DifficultyMenu(Bot1Diff):- clearConsole, displayBot1DifficultyMenu, nl, getInputAndValidate(1, 2, Bot1Diff).
+bot1DifficultyMenu(Bot1Diff):- clearConsole, displayBot1DifficultyMenu, nl, getInputAndValidate(1, 3, Bot1Diff).
 
 /*
  * bot2DifficultyMenu/0
@@ -222,7 +222,7 @@ bot1DifficultyMenu(Bot1Diff):- clearConsole, displayBot1DifficultyMenu, nl, getI
  * Displays the bot 2 difficulty menu and handles user input
  *
  */
-bot2DifficultyMenu(Bot2Diff):- clearConsole, displayBot2DifficultyMenu, nl, getInputAndValidate(1, 2, Bot2Diff).
+bot2DifficultyMenu(Bot2Diff):- clearConsole, displayBot2DifficultyMenu, nl, getInputAndValidate(1, 3, Bot2Diff).
 
 /*
  * handleChoice(+Choice)
@@ -234,4 +234,4 @@ handleChoice(0):- clearConsole, write('It''s a shame you don''t want to play any
 handleChoice(1):- write('Starting game'), nl, !, playGamePlayerVsPlayer.
 handleChoice(2):- botDifficultyMenu(BotLevel), !, playGamePlayerVsComputer(BotLevel).
 handleChoice(3):- botDifficultyMenu(BotLevel), !, playGameComputerVsPlayer(BotLevel).
-handleChoice(4):- bot1DifficultyMenu(Bot1Level), bot2DifficultyMenu(Bot2Level), write('Bot 1: '), write(Bot1Level), nl, write('Bot 2:'), write(Bot2Level), sleep(1), !, playGameComputerVsComputer(Bot1Level, Bot2Level).
+handleChoice(4):- bot1DifficultyMenu(Bot1Level), bot2DifficultyMenu(Bot2Level), !, playGameComputerVsComputer(Bot1Level, Bot2Level).
