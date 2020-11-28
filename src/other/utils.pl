@@ -1,10 +1,6 @@
 :- use_module(library(lists)).
 :- use_module(library(between)).
 
-test_get:- get_matrix_value(2, 1, [[1, 2, 3], [4, 5, 6], [7, 8, 9]], Res).
-testRefill:- refillList([b, b, w, b, b, e], List), printList(List).
-testRemove:- removeFromList(3, [1, 2, 3, 4, 5, 6], NewList), printList(NewList).
-
 /*
  * getMatrixValue(+Nrow, +Ncol,+Matrix, -Res)
  *
@@ -44,7 +40,7 @@ getNumPiecesInCell(_, Acc, Acc):- !.
 getDistance(X1, Y1, X2, Y2, Distance):- 
 	X1 =:= X2, !, 
 	Distance is abs(Y1-Y2).
-getDistance(X1, Y1, X2, Y2, Distance):- 
+getDistance(X1, _, X2, _, Distance):- 
 	Distance is abs(X1-X2).
 
 /*
@@ -158,7 +154,7 @@ removeFirstNElements(N, List, FinalList):- N > 0, N1 is N-1,
  * Removes the first element from List and returns the resulting list in ResultingList.
  *
  */
-removeFirstElement([Head|Tail], Tail).
+removeFirstElement([_|Tail], Tail).
 
 /*
  * decomposeState(+GameState, -Board, -WhiteCubes, -BlackCubes)

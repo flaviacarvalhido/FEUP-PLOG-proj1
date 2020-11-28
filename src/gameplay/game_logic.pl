@@ -1,6 +1,6 @@
 :- use_module(library(lists)).
-:- include('utils.pl').
-:- include('menus.pl').
+:- include('../other/utils.pl').
+:- include('../display/menus.pl').
 
 /*
  * validCoords(+Nrows, +Ncols, +X, +Y)
@@ -103,7 +103,7 @@ validMove([X1, Y1, X2, Y2|_], Board):-
  * Succeeds if Move represents a valid move for the player playing with color Color in the current board Board.
  *
  */
-isMoveValidColor(Color, [X1, Y1, X2, Y2|_], Board):- getMatrixValue(X1, Y1, Board, Cell), getTopPiece(Cell, Piece), !, Piece == Color.
+isMoveValidColor(Color, [X1, Y1, _, _ |_], Board):- getMatrixValue(X1, Y1, Board, Cell), getTopPiece(Cell, Piece), !, Piece == Color.
 
 /*
  * checkPlayerColor(+Player, -Color)
@@ -192,7 +192,7 @@ countCubesBoard(CubeColor, [Head|Tail], NumCubesCurrent, NumCubes):- countCubesR
  */
 countCubesRow(_, [], NumCubesCurrent, NumCubesCurrent).
 countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- getTopPiece(Head, Piece), Piece == CubeColor, !, NumCubesCurrentNew is NumCubesCurrent+1, countCubesRow(CubeColor, Tail, NumCubesCurrentNew, NumCubesFinal).
-countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- countCubesRow(CubeColor, Tail, NumCubesCurrent, NumCubesFinal).
+countCubesRow(CubeColor, [_|Tail], NumCubesCurrent, NumCubesFinal):- countCubesRow(CubeColor, Tail, NumCubesCurrent, NumCubesFinal).
 
 /*
  * prepCellSource(+Cell, +NumberOfPiecesToMove, -NewCell)
