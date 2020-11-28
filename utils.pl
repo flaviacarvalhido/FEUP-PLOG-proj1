@@ -137,6 +137,8 @@ refillList(List, FinalList):- length(List, Len), LenToAdd is 12-Len, buildListTo
  * (Acc should be an empty list when calling this predicate)
  *
  */
+
+getFirstNElements(_, [], Acc, Elements):- reverse(Acc, Elements).
 getFirstNElements(0, _, Acc, Elements):- reverse(Acc, Elements).
 getFirstNElements(N, [Head|Tail], Acc, Elements):-  N > 0, N1 is N-1,
 												getFirstNElements(N1, Tail, [Head|Acc], Elements).
@@ -159,6 +161,7 @@ removeFirstNElements(N, List, FinalList):- N > 0, N1 is N-1,
  *
  */
 removeFirstElement([Head|Tail], Tail).
+
 
 /*
  * decomposeState(+GameState, -Board, -WhiteCubes, -BlackCubes)

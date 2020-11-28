@@ -155,6 +155,15 @@ isGameOver([H|T], Color):-
 	isGameOver(T, Color).
 
 /*
+ * game_over(+GameState, -Winner)
+ *
+ * If the game is over, returns the player who won in Winner, else fails.
+ *
+ */
+game_over(GameState, 'White'):-	checkWinner('White', GameState), nth0(0, GameState, Board), checkGameOver(Board, b).
+game_over(GameState, 'Black'):-	checkWinner('Black', GameState), nth0(0, GameState, Board), checkGameOver(Board, w).
+
+/*
  * lineHasNoStacks(+Line, +Color)
  *
  * Succeeds if the player of color Color doesn't control any stacks in the line Line.
