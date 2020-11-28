@@ -29,7 +29,7 @@ play:- 	mainMenu ; true.
 
 % Tests
 
-testInput:- testBoard(Board), GameState = [Board, 9, 9], displayGame(GameState, 'Black'), askForPlayerInput(Move, 'Black', GameState).
+testInput:- testBoard(Board), GameState = [Board, 9, 9], displayGame(GameState, 'Black'), askForPlayerInput(Move, 'Black', GameState), write(Move), nl.
 
 testGet:- testBoard(Board), displayBoard(Board, 5), checkSelection(0, 4, 'Black', Board).
 
@@ -58,7 +58,4 @@ testMoveColor:- initialBoard(Board), isMoveValidColor(w, [2, 0, 0, 1], Board).
 testCheckGameOver:- finalBoard1(Board), isGameOver(Board, w).
 
 testMoves:- testBoard(Board), GameState=[Board, 4, 4], displayGame(GameState, 'White'), move(GameState, [4, 3, 4, 4], NewGameState), displayGame(NewGameState, 'Black').
-
-
-% validMove([4, 2, 4, 1], Board), isMoveValidColor(b, [4, 2, 4, 1], Board).
 

@@ -65,7 +65,12 @@ askForPlayerInput(Move, Player, GameState):-	nth0(0, GameState, Board),
 												askForPiece(SourcePos, Player, Board),
 												!, askForMove(SourcePos, GameState, Move), !, write(Move).
 
-/*ask for move (input)*/
+/*
+ * askForMove(+InitialPos, +GameState, -Move)
+ *
+ * Asks the player for input regarding where he wants to move the previously selected stack to. The selected position is returned in Move.
+ *
+ */
 askForMove(InitialPos, GameState, Move):-
 	get DestRow asking 'Select the position you wish to move to. X? ',
 	get DestColumn asking 'Y? ', nl,
@@ -74,12 +79,16 @@ askForMove(InitialPos, GameState, Move):-
 	append(InitialPos, Coords, Move),
 	write(Move), nl, !,
 	validMove(Move, Board).
-
 askForMove(InitialPos, GameState, Move):-
 	write('Invalid Move.'), nl,
 	askForMove(InitialPos, GameState, Move).
 
-
+/*
+ * validMove(+Move, +Board)
+ *
+ * Succeeds if Move represents a valid move for any player in the current board Board.
+ *
+ */
 validMove([X1, Y1, X2, Y2|_], Board):-
 	(X1 =\= X2; Y1 =\= Y2),
 	validCoords(5, 5, X1, Y1),
@@ -88,82 +97,139 @@ validMove([X1, Y1, X2, Y2|_], Board):-
 	sameRowOrColumn(X1, Y1, X2, Y2),							
 	getDistance(X1, Y1, X2, Y2, Distance), !, Distance > 0, Distance < 5, Distance =< NumPieces.
 
-
+/*
+ * isMoveValidColor(+Color, +Move, +Board)
+ *
+ * Succeeds if Move represents a valid move for the player playing with color Color in the current board Board.
+ *
+ */
 isMoveValidColor(Color, [X1, Y1, X2, Y2|_], Board):- getMatrixValue(X1, Y1, Board, Cell), getTopPiece(Cell, Piece), !, Piece == Color.
 
-/*calculate next player*/
-nextPlayer(Player, Next):- Player=='Black', Next='White'.
-nextPlayer(Player, Next):- Player=='White', Next='Black'.
-
-/*get player color*/
+/*
+ * checkPlayerColor(+Player, -Color)
+ *
+ * Given the player's name ('Black' or 'White'), returns the atom corresponding to its color
+ *
+ */
 checkPlayerColor(Player, Color):- Player=='Black', Color='b'.
 checkPlayerColor(Player, Color):- Player=='White', Color='w'.
 
-/*winner condition*/
-
-checkWinner(Player, NewGameState):-
-	isWinner(Player, NewGameState), !,
+/*
+ * checkWinner(+Player, +GameState)
+ *
+ * Succeeds if one the player Player wins by placing all his cubes and displays the game over message.
+ *
+ */
+checkWinner(Player, GameState):-
+	isWinner(Player, GameState), !,
 	(Player=='Black'-> (sleep(1), clearConsole, displayGameOverMessageBlack, sleep(2), nl); (sleep(1), clearConsole, displayGameOverMessageWhite, sleep(2), nl)).
 
-isWinner(Player, NewGameState):- Player=='Black', nth0(1, NewGameState, BlackCubes), BlackCubes==0.
-isWinner(Player, NewGameState):- Player=='White', nth0(2, NewGameState, WhiteCubes), WhiteCubes==0.
+/*
+ * isWinner(+Player, +GameState)
+ *
+ * Succeeds if player Player wins by placing all his cubes.
+ *
+ */
+isWinner(Player, GameState):- Player=='Black', nth0(1, GameState, BlackCubes), BlackCubes==0.
+isWinner(Player, GameState):- Player=='White', nth0(2, GameState, WhiteCubes), WhiteCubes==0.
 
-/*game over condition*/
-% checkGameOver(BoardState, Color)
-
+/*
+ * checkGameOver(+Board, +Color)
+ *
+ * Succeeds if the player of color Color loses by not controlling any disc and displays the game over message.
+ *
+ */
 checkGameOver(Board, Color):-
 	isGameOver(Board, Color), !,
 	(Color == 'w' -> (sleep(1), clearConsole, displayGameOverMessageBlack, sleep(2), nl); (sleep(1), clearConsole, displayGameOverMessageWhite, sleep(2), nl)).
 	
-
+/*
+ * isGameOver(+Board, +Color)
+ *
+ * Succeeds if the player of color Color loses by not controlling any disc.
+ *
+ */
 isGameOver([], _).
-
 isGameOver([H|T], Color):-
 	lineHasNoStacks(H, Color),
 	isGameOver(T, Color).
 
-
-
-% lineHasNoStacks(Line, Color)
+/*
+ * lineHasNoStacks(+Line, +Color)
+ *
+ * Succeeds if the player of color Color doesn't control any stacks in the line Line.
+ *
+ */
 lineHasNoStacks([], _).
-
 lineHasNoStacks([H|T], Color):-
 	hasNoStacks(H, Color), !,
 	lineHasNoStacks(T, Color).	
 
-
+/*
+ * lineHasNoStacks(+Stack, +Color)
+ *
+ * Succeeds if the player of color Color does not control a stack in the cell Stack.
+ *
+ */
 hasNoStacks(Stack, Color):-			
-	getTopPiece(Stack, Piece), !, 				/*check for cube or disc*/
-	\+Piece == Color.	
-																									
-isDisc(T):- T == 'w'; T == 'b'.
-
-getTopDisc(Stack, Piece):-       
 	getTopPiece(Stack, Piece), !,
-	isDisc(Piece).
+	\+Piece == Color.	
 
-
-testPrep:- prepCellDest([b, b, b, b, b, b, e, e, e, e, e, e], [w, w, w], NewCell), printList(NewCell).
-
+/*
+ * countCubesBoard(+CubeColor, +Board, +NumCubesCurrent, -NumCubes)
+ *
+ * Counts the number of cubes of type CubeColor in the board and returns it in NumCubes.
+ *
+ */
 countCubesBoard(_, [], NumCubesCurrent, NumCubesCurrent).
 countCubesBoard(CubeColor, [Head|Tail], NumCubesCurrent, NumCubes):- countCubesRow(CubeColor, Head, 0, NumCubesRow), NumCubesCurrentNew is NumCubesCurrent + NumCubesRow, countCubesBoard(CubeColor, Tail, NumCubesCurrentNew, NumCubes).
 
+/*
+ * countCubesRow(+CubeColor, +Row, +NumCubesCurrent, -NumCubes)
+ *
+ * Counts the number of cubes of type CubeColor in the received row and returns it in NumCubes.
+ *
+ */
 countCubesRow(_, [], NumCubesCurrent, NumCubesCurrent).
 countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- getTopPiece(Head, Piece), Piece == CubeColor, !, NumCubesCurrentNew is NumCubesCurrent+1, countCubesRow(CubeColor, Tail, NumCubesCurrentNew, NumCubesFinal).
 countCubesRow(CubeColor, [Head|Tail], NumCubesCurrent, NumCubesFinal):- countCubesRow(CubeColor, Tail, NumCubesCurrent, NumCubesFinal).
 
+/*
+ * prepCellSource(+Cell, +NumberOfPiecesToMove, -NewCell)
+ *
+ * Takes NumberOfPiecesToMove pieces from Cell and refills it with atoms representing an empty space. Used when moving pieces.
+ *
+ */
 prepCellSource(Cell, NumberOfPiecesToMove, NewCell):- 	removeFirstNElements(NumberOfPiecesToMove, Cell, CellAfter),
 														refillList(CellAfter, NewCell).
 
+/*
+ * prepCellDest(+Cell, +PiecesToAdd, -NewCell)
+ *
+ * Adds PiecesToAdd to the beginning of the cell and removes the exceeding 'e' atoms. Used when moving pieces.
+ *
+ */
 prepCellDest([wC, e, e, e, e, e, e, e, e, e, e, e], PiecesToAdd, NewCell):- Cell = [e, e, e, e, e, e, e, e, e, e, e, e], append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
 prepCellDest([bC, e, e, e, e, e, e, e, e, e, e, e], PiecesToAdd, NewCell):- Cell = [e, e, e, e, e, e, e, e, e, e, e, e], append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
 prepCellDest(Cell, PiecesToAdd, NewCell):- append(PiecesToAdd, Cell, TempCell), length(PiecesToAdd, Len), removeFromListEnd(Len, TempCell, NewCell).
 
+/*
+ * insertCube(+Cell, -NewCell, +Color)
+ *
+ * Places a cube in Cell if one needs to be placed, else leaves the cell as it is.
+ *
+ */
 insertCube(Cell, NewCell, w):- Cell == [e, e, e, e, e, e, e, e, e, e, e, e], !, NewCell = [wC, e, e, e, e, e, e, e, e, e, e, e].
 insertCube(Cell, Cell, w).
 insertCube(Cell, NewCell, b):- Cell == [e, e, e, e, e, e, e, e, e, e, e, e], !, NewCell = [bC, e, e, e, e, e, e, e, e, e, e, e].
 insertCube(Cell, Cell, b).
 
+/*
+ * movePieces(+Board, +Move, -NewBoard)
+ *
+ * Performs the move (X1, Y1) -> (X2, Y2) and returns a new board with the move already performed
+ *
+ */
 movePieces(Board, [X1, Y1, X2, Y2|_], NewBoard):- 	getMatrixValue(X1, Y1, Board, SourceCell), getMatrixValue(X2, Y2, Board, DestCell),
 													getDistance(X1, Y1, X2, Y2, Distance),
 													getFirstNElements(Distance, SourceCell, [], PiecesToMove),
@@ -174,6 +240,12 @@ movePieces(Board, [X1, Y1, X2, Y2|_], NewBoard):- 	getMatrixValue(X1, Y1, Board,
 													replaceInBoard(Board, X1, Y1, NewSourceCell, TempBoard),
 													replaceInBoard(TempBoard, X2, Y2, NewDestCell, NewBoard).
 
+/*
+ * move(+GameState, +Move, -NewGameState)
+ *
+ * Performs the move (X1, Y1) -> (X2, Y2) and returns a new game state with the move already performed
+ *
+ */
 move(GameState, Move, NewGameState):- 	nth0(0, GameState, Board),
 										movePieces(Board, Move, NewBoard),
 										countCubesBoard(bC, NewBoard, 0, BlackCubes),

@@ -198,7 +198,7 @@ displayBot2DifficultyMenu:-
  * Displays the main menu and handles user input
  *
  */
-mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   : '), getInputAndValidate(0, 4, UserChoice), !, handleChoice(UserChoice).
+mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   : '), getInputAndValidate(0, 4, UserChoice), !, handleChoice(UserChoice), mainMenu.
 
 /*
  * botDifficultyMenu/0
@@ -231,7 +231,7 @@ bot2DifficultyMenu(Bot2Diff):- clearConsole, displayBot2DifficultyMenu, nl, getI
  *
  */
 handleChoice(0):- write('It''s a shame you don''t want to play anymore. Quitting...').
-handleChoice(1):- playGamePlayerVsPlayer, write('Handle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'), nl.
-handleChoice(2):- botDifficultyMenu(BotLevel), playGamePlayerVsComputer(BotLevel).
-handleChoice(3):- botDifficultyMenu(BotLevel), playGameComputerVsPlayer(BotLevel).
+handleChoice(1):- write('Starting game'), nl, !, playGamePlayerVsPlayer, write('Handle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'), nl.
+handleChoice(2):- botDifficultyMenu(BotLevel), !, playGamePlayerVsComputer(BotLevel).
+handleChoice(3):- botDifficultyMenu(BotLevel), !, playGameComputerVsPlayer(BotLevel).
 handleChoice(4):- bot1DifficultyMenu(Bot1Level), bot2DifficultyMenu(Bot2Level), write('Bot 1: '), write(Bot1Level), nl, write('Bot 2:'), write(Bot2Level), sleep(1), !, playGameComputerVsComputer(Bot1Level, Bot2Level).
