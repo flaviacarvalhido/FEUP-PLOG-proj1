@@ -24,6 +24,12 @@ ___
   - Tomás Costa Fontes - up201806252
 
 
+## Installation and Execution
+- To play this game, the user must have SICStus Prolog 4.6 installed on their machine.
+- After installing SICStus, if on Windows, the user must open the SICStus console and click on __File -> Consult...__ and choose the **game.pl** file from the source-code folder.
+- If on Linux, the user must open a terminal window and start the sicstus console by typing **sicstus-4.6.0**. After that, the user should write **consult([path to the source code folder]/game.pl).**
+- To start playing, it is necessary to write **play.** on the console, therefore calling the play/0 predicate, which starts the game.
+
 ## Game and Rules?
 
 - Nava is a game where players compete to be the first to lay all their Cubes on the board. They do this by moving Discs to capture rival pieces and lay Cubes to conquer junctions. 
@@ -46,8 +52,9 @@ ___
   - Official Rule Sheet: https://drive.google.com/file/d/1qfZp_uDWRPxPU5U2lN-EGNDfEHkjha1u/view
 
 
+## Game Logic
 
-## Game State Representation
+### Game State Representation
 
 The board contains 5 lines, with 5 playable cells in each line, making it a 5x5 matrix. However, because each cell can have multiple pieces in it, we decided to use a list of lists of lists, representing the rows, the cells in each row and the stack of pieces in each cell, respectively.
 We also decided to represent each cell as a list with 12 elements, as pieces can stack up to that number on the same cell.
@@ -86,7 +93,7 @@ Final state:
 
 
 
-## Visualization of the game state
+### Visualization of the game state
 
 The game state visualization on the SICSTUS console is as follows.
 <p align="center">
@@ -96,6 +103,37 @@ The game state visualization on the SICSTUS console is as follows.
 The initial game state is generated using the **_initial(-GameState)_** predicate, which calls the **_initialBoard(-Board)_** predicate to generate the initial board and then sets the number of black and white cubes to their respective values.
 The visualization of the game state is executed using the **_displayGame(+GameState, +Player)_** predicate. This predicate calls **_displayBoard(+Board)_** to display the received board and displays the remaining information itself.
 The **_displayBoard(+Board)_** predicate calls recursively some auxiliary predicates, like **_displayLine_**, **_displayCell_** and **_displayPiece_**, using them to recursively print the game board.
+
+### Valid Moves List
+
+In order to obtain a list with all possible moves for a given player, we need to know how to determine if a move is valid or not. This part of the logic is represented in the predicate validMove/2. A move, represented by a list containing the initial coordinates (X1, Y1) and the final coordinates(X2, Y2) is considered valid if the following conditions are met:
+- Both the initial and final coordinates are valid coordinates (predicate validCoords/4).
+- The player controls a stack located at the initial coordinates of the board (predicate getMatrixValue/4).
+- The initial coordinates and the final coordinates are in the same row or column, as the game doesn't support diagonal or compound moves (predicate sameRowOrColumn/4).
+- The player has enough pieces in the stack to move the amount of cells he wants to move, that is, because the player always has to move the same number of pieces as the number of cells he wants to move (if he wants to move 2 cells, then 2 pieces have to be moved), then the number of pieces in the player's stack has to be lower or equal than the distance between the initial and final coordinates (predicates getNumPiecesInCell/3 and getDistance/5).
+
+If all these conditions are met, then the move (X1, Y1) -> (X2, Y2) is considered valid.
+The predicates responsible for this part of the logic are the following:
+- getAllValidMoves(+Board, -Moves, +Color) - iterates through all the possible pairs of coordinates to find valid moves.
+- valid_moves(+GameState, +Player, -ListOfMoves) - calls the getAllValidMoves/3 predicate to get all valid moves for the received player.
+
+
+### Board Evaluation
+One very important part of the artificial intelligence in this game is the board evaluation, as that is what determines whether a move is good or not. This part of the logic is present in the predicate value/3.
+In order to evaluate a certain game state, a mathematical formula was used. The formula was the following:
+**Score = NumberOfPiecesFromThePlayer - NumberOfPiecesFromTheOpponent + NumberOfPlacedCubesFromThePlayer - NumberOfPlacedCubesFromTheOpponent**
+All the formula values are calculated after the move has been simulated. Therefore, a move is better the higher it scores.
+The predicates responsible for this part of the logic are the following:
+- evaluateState(+GameState, +Color, -Score) - evaluates the game state based on the above mentioned formula.
+- value(+GameState, +Player, -Value) - calls the evaluateState/3 predicate to evaluate the received game state.
+
+### Computer's Move
+When the computer is playing, there needs to be a way to determine which move it's going to make, and that is achieved using the predicate choose_move/4. On our implementation of the game, there are three levels of difficulty for the bots. The easy bot always performs a random move, the medium bot always performs a random move from the 5 moves with the highest score, and the hard bot always performs the best move.
+The predicates responsible for this logic are the following:
+- getAllValidMoves(+Board, -Moves, +Color) - Gets all the valid moves for a certain player
+- sortMovesByScore(+Board, -SortedMoves, +Color) - Maps the moves to their respective score and sorts them based on it.
+- getRandomMove(+Moves, -ChosenMove) - Returns a randomly chosen move from the moves list.
+- getBestMove(+Moves, -ChosenMove) - Returns the move with the highest score from the moves list.
 
 
 ## Documentation
