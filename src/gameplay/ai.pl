@@ -1,8 +1,8 @@
-:- use_module(library(lists)).
 :-include('game_logic.pl').
-:-include('utils.pl').
-:- use_module(library(between)).
+:-use_module(library(between)).
 :-use_module(library(random)).
+:-use_module(library(lists)).
+
 
 /*
  * evaluateState(+GameState, +Color, -Score)
@@ -52,7 +52,7 @@ getNumPiecesOfColorRow([Head|Tail], Color, StartNum, Num):- getTopPiece(Head, Pi
 															getNumPiecesInCell(Head, 0, NumPieces),
 															StartNumNew is StartNum + NumPieces,
 															getNumPiecesOfColorRow(Tail, Color, StartNumNew, Num).
-getNumPiecesOfColorRow([Head|Tail], Color, StartNum, Num):- getNumPiecesOfColorRow(Tail, Color, StartNum, Num).
+getNumPiecesOfColorRow([_|Tail], Color, StartNum, Num):- getNumPiecesOfColorRow(Tail, Color, StartNum, Num).
 
 /*
  * getAllValidMoves(+Board, -Moves, +Color)

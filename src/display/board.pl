@@ -140,8 +140,8 @@ displayBorderHorizontal:- write(' ______________________________________________
 displayBorderVertical:- write('|').
 
 % displays a line of the board
-displayLine([], _, Nrow).
-displayLine([C|[]], N, Nrow):- displayCell(C), displayBorderVertical, write(' '), write(Nrow), nl.
+displayLine([], _, _).
+displayLine([C|[]], _, Nrow):- displayCell(C), displayBorderVertical, write(' '), write(Nrow), nl.
 displayLine([C|L], N, Nrow):- N =:= 5, !, N1 is N-1, displayBorderVertical, displayCell(C), write(' -- '), displayLine(L, N1, Nrow).
 displayLine([C|L], N, Nrow):- N1 is N-1, displayCell(C), write(' -- '), displayLine(L, N1, Nrow).
 
@@ -156,7 +156,7 @@ displayPiece(C):- getCode(C, Code),write(Code).
 generateInitialBoard(FinalBoard, FinalBoard, _, _, 0):- !.
 generateInitialBoard(Board, FinalBoard, Npieces, Ncols, N):- N > 0,
 														N1 is N-1,
-														generateRow([], FinalFinal, Nrows, N, Ncols, Npieces, Ncols),
+														generateRow([], FinalFinal, _, N, Ncols, Npieces, Ncols),
 														generateInitialBoard([FinalFinal|Board], FinalBoard, Npieces, Ncols, N1).
 
 % generates a board row with Ncols cells
