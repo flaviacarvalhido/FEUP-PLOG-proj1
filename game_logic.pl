@@ -50,6 +50,7 @@ selectStack(Coords, Player, Board):-
  *
  */
 checkSelection(Column, Row, Player, Board):-
+	integer(Column), integer(Row),
 	validCoords(5, 5, Column, Row),
 	getMatrixValue(Column, Row, Board, Stack), !,
 	checkPlayerColor(Player, Color),
@@ -90,6 +91,8 @@ askForMove(InitialPos, GameState, Move):-
  *
  */
 validMove([X1, Y1, X2, Y2|_], Board):-
+	integer(X1), integer(Y1),
+	integer(X2), integer(Y2),
 	(X1 =\= X2; Y1 =\= Y2),
 	validCoords(5, 5, X1, Y1),
 	validCoords(5, 5, X2, Y2),							
