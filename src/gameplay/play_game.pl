@@ -1,4 +1,4 @@
-
+:-include('game_logic.pl').			%FIXME: redundant but keeps the player-player game working??
 :-include('../display/board.pl').
 :-include('ai.pl').
 :-use_module(library(system)).

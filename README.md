@@ -117,6 +117,20 @@ The predicates responsible for this part of the logic are the following:
 - getAllValidMoves(+Board, -Moves, +Color) - iterates through all the possible pairs of coordinates to find valid moves.
 - valid_moves(+GameState, +Player, -ListOfMoves) - calls the getAllValidMoves/3 predicate to get all valid moves for the received player.
 
+### Move Execution
+
+The predicate move/3 is the responsible to perform the move (X1,Y1) -> (X2,Y2) and consequently calculate the updated GameState and its different components. This predicate calls the auxiliary predicate movePieces/3 executes the stack move: checks the distance that the stack is moving, select the stack elements that need to move (distance = number of discs moving) and checks for the need to add a cube, which only happens when a stack moves out entirely from a junction. 
+
+After executing movePieces, the NewBoard is already calculated and all there's left to calculate for the new GameState are the remaining cubes left to play for each player. Those are calculated by calling the predicate countCubesBoard/4 for each player, which returns the number of cubes placed in the new Board. The NewGameState is then formed by joining the new Board, white cubes and black cubes onto a list.
+
+
+### Game Over
+
+The game_over/2 predicate checks if some of the game over conditions is confirmed. There are two game over conditions:
+- a player loses all their stacks and loses the game
+- a player lays down all their cubes on the board, winning the game
+
+The game_over/2 predicate makes use of two auxiliary predicates. The checkWinner/2 predicate which checks if the cubes from a given player are all placed down on the board allows us to check one of the game over conditions. Aditionally, the checkGameOver/2 predicate allows us to check if a given player has lost ownership of all their stacks, therefore checking the other game over condition. The game over message is written by these two auxiliary predicates, containing the identification of the game winner, which is also returned by the game_over/2 predicate when it succeeds.
 
 ### Board Evaluation
 One very important part of the artificial intelligence in this game is the board evaluation, as that is what determines whether a move is good or not. This part of the logic is present in the predicate value/3.
@@ -134,6 +148,11 @@ The predicates responsible for this logic are the following:
 - sortMovesByScore(+Board, -SortedMoves, +Color) - Maps the moves to their respective score and sorts them based on it.
 - getRandomMove(+Moves, -ChosenMove) - Returns a randomly chosen move from the moves list.
 - getBestMove(+Moves, -ChosenMove) - Returns the move with the highest score from the moves list.
+
+## Conclusion
+
+Conclusões do trabalho, incluindo limitações do trabalho desenvolvido (known
+issues), assim como possíveis melhorias identificadas (roadmap). (até 250 palavras)
 
 
 ## Documentation
