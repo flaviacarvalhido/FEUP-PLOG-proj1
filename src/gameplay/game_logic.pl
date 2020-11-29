@@ -1,6 +1,6 @@
 :- use_module(library(lists)).
-:- include('../other/utils.pl').
-:- include('../display/menus.pl').
+:- use_module('../other/utils.pl').
+:- ensure_loaded('../display/menus.pl').
 
 /*
  * validCoords(+Nrows, +Ncols, +X, +Y)
@@ -36,7 +36,7 @@ askForPiece(Move, Player, Board):-
  */
 selectStack(Coords, Player, Board):-
 	get StackRow asking 'Select the stack you wish to move: X? ',
-	get StackColumn asking 'Y? ', nl, !,
+	get StackColumn asking 'Y? ', nl,
 	Coords = [StackColumn, StackRow],
 	checkSelection(StackColumn, StackRow, Player, Board).
 selectStack(Coords, Player, Board):-
@@ -50,6 +50,7 @@ selectStack(Coords, Player, Board):-
  *
  */
 checkSelection(Column, Row, Player, Board):-
+	integer(Column), integer(Row),
 	validCoords(5, 5, Column, Row),
 	getMatrixValue(Column, Row, Board, Stack), !,
 	checkPlayerColor(Player, Color),
@@ -77,7 +78,7 @@ askForMove(InitialPos, GameState, Move):-
 	Coords = [DestColumn, DestRow],
 	nth0(0, GameState, Board),
 	append(InitialPos, Coords, Move),
-	write(Move), nl, !,
+	write(Move), nl,
 	validMove(Move, Board).
 askForMove(InitialPos, GameState, Move):-
 	write('Invalid Move.'), nl,
@@ -90,6 +91,8 @@ askForMove(InitialPos, GameState, Move):-
  *
  */
 validMove([X1, Y1, X2, Y2|_], Board):-
+	integer(X1), integer(Y1),
+	integer(X2), integer(Y2),
 	(X1 =\= X2; Y1 =\= Y2),
 	validCoords(5, 5, X1, Y1),
 	validCoords(5, 5, X2, Y2),							

@@ -1,4 +1,4 @@
-
+:- include('../other/utils.pl').
 
 % generates the initial state of the game
 initial(GameState):- initialBoard(Board),
@@ -15,7 +15,7 @@ initialBoard([
 			[[e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [b,b,b,b,b,b,e,e,e,e,e,e]]
 			]).
 
-initialBoardTest([
+initialBoardAlt([
 			[[w,w,w,w,w,w], [], [], [], []],
 			[[], [], [], [], []],
 			[[], [], [], [], []],
@@ -38,15 +38,6 @@ initialState(
 ]
 ).
 
-testBoard(
-	[
-		[[wC,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e]],
-		[[e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e]],
-		[[w,w,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e]],
-		[[e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e]],
-		[[b,b,b,b,w,w,w,w,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [e,e,e,e,e,e,e,e,e,e,e,e], [b,b,e,e,e,e,e,e,e,e,e,e]]
-	]
-).
 
 % Black loses because he doesnt have any moveable piece
 % generates an example of an end game board
@@ -122,34 +113,130 @@ intermediateState(
 ]
 ).
 
-testDisplay:- initialBoard(Board), displayFullBoard(Board).
-testWrite:- format(' er ~|~s~t~50|~|   er~n', ['b b b']).
+/*
+ *
+ *	Helper predicates for board aesthethics
+ *
+ */
+displayCoordsHorizontal:-	write('|      0      |      1      |      2      |      3      |      4      |'), nl.
+displayBorderHorizontalAlt:-	write('|_____________________________________________________________________|___'), nl.
+displayIntermediateLineEmptyAlt:-	write('|             |             |             |             |             |'), nl.
+displayIntermediateLineAlt:-	write('|---------------------------------------------------------------------|---'), nl.
 
+/* displayGame(+GameState, +Player)
+ *
+ * Displays the received GameState
+ *
+ */
+displayGame(GameState, Player):- 
+	nth0(0, GameState, Board),
+	nth0(1, GameState, BlackCubes),
+	nth0(2, GameState, WhiteCubes),
+	displayFullBoardAlt(Board),
+	write(Player), write(' is up next.'), nl,
+	write('Black has '), write(BlackCubes), write(' cubes available to play.'), nl,
+	write('White has '), write(WhiteCubes), write(' cubes available to play.'), nl.
+
+/*
+ * displayFullBoardAlt(+Board)
+ *	
+ * Displays the full board with the top frame.
+ *
+ */
+displayFullBoardAlt(Board):- displayCoordsHorizontal, displayBorderHorizontalAlt, displayBoardAlt(Board, 0), displayBorderHorizontalAlt.
+
+/*
+ * displayBoardAlt(+Board, +N)
+ *	
+ * Displays the board.
+ *
+ */
+displayBoardAlt([], _).
+displayBoardAlt([BoardHead|BoardTail], 4):-	displayIntermediateLineEmptyAlt, displayRowAlt(BoardHead, 0, 5, 4), nl, displayRowAlt(BoardHead, 1, 5, 0), nl, displayIntermediateLineEmptyAlt, displayBoardAlt(BoardTail, _).
+displayBoardAlt([BoardHead|BoardTail], N):-	N1 is N+1, displayIntermediateLineEmptyAlt, displayRowAlt(BoardHead, 0, 5, N), nl, displayRowAlt(BoardHead, 1, 5, N), nl, displayIntermediateLineEmptyAlt, displayIntermediateLineAlt, displayBoardAlt(BoardTail, N1).
+
+/*
+ * displayRowAlt(+Row, +Flag, +N, +NRow)
+ *	
+ * Displays a row of the board. Flag tells the predicate whether to display the bottom part of the stack or the top part.
+ * N is the number of the cell to be displayed and NRow is the number of the current row.
+ *
+ */
+displayRowAlt([], 0, _, NRow):- displayBorderVertical, write(' '), write(NRow).
+displayRowAlt([], _, _, _):- displayBorderVertical.
+displayRowAlt([RowHead|RowTail], 0, 5, NRow):-	displayBorderVertical, displayCellAlt(RowHead, 0), displayBorderVertical, displayRowAlt(RowTail, 0, 4, NRow).
+displayRowAlt([RowHead|RowTail], 0, 1, NRow):-	displayCellAlt(RowHead, 0), displayRowAlt(RowTail, 0, 4, NRow).
+displayRowAlt([RowHead|RowTail], 0, N, NRow):-	N1 is N-1, displayCellAlt(RowHead, 0), displayBorderVertical, displayRowAlt(RowTail, 0, N1, NRow).
+displayRowAlt([RowHead|RowTail], 1, 5, NRow):-	displayBorderVertical, displayCellAlt(RowHead, 1), displayBorderVertical, displayRowAlt(RowTail, 1, 4, NRow).
+displayRowAlt([RowHead|RowTail], 1, 1, NRow):-	displayCellAlt(RowHead, 1), displayRowAlt(RowTail, 1, 4, NRow).
+displayRowAlt([RowHead|RowTail], 1, N, NRow):-	N1 is N-1, displayCellAlt(RowHead, 1), displayBorderVertical, displayRowAlt(RowTail, 1, N1, NRow).
+
+/*
+ * displayCellAlt(+Cell, +Flag)
+ *	
+ * Displays a cell of the board. Flag tells the predicate whether to show the bottom part of the cell or the top part.
+ *
+ */
+displayCellAlt([], _).
+displayCellAlt(Cell, 0):-	getFirstNElements(6, Cell, [], Elements), write(' '), displayCell(Elements).
+displayCellAlt(Cell, 1):-	removeFirstNElements(6, Cell, NewCell), write(' '), displayCell(NewCell).
+
+/*
+ * displayFullBoard(+Board)
+ *	
+ * Displays the full board with the top frame.
+ *
+ */
 displayFullBoard(Board):- write('|            0                         1                           2                           3                           4             |'), nl, displayBoard(Board, 0).
 
-% displays the board
+/*
+ * displayBoard(+Board, +N)
+ *	
+ * Displays the board.
+ *
+ */
 displayBoard([], _).
 displayBoard([L|[]], N):- displayLine(L, 5, N), displayBorderHorizontal, nl.
 displayBoard([L|T], N):- N =:= 0, !, N1 is N+1, displayBorderHorizontal, nl, displayIntermediateLineEmpty, nl, displayLine(L, 5, N), displayIntermediateLineEmpty, nl, displayIntermediateLine, nl, displayIntermediateLine, nl, displayIntermediateLineEmpty, nl, displayBoard(T, N1).
 displayBoard([L|T], N):- N1 is N+1, displayIntermediateLineEmpty, nl, displayLine(L, 5, N), displayIntermediateLine, nl, displayIntermediateLine, nl, displayIntermediateLineEmpty, nl, displayBoard(T, N1).
 
-% displays a line for the board aesthetics
+/*
+ *
+ *	Helper predicates for board aesthethics
+ *
+ */
 displayIntermediateLineEmpty:- write('|                                                                                                                                        |').
 displayIntermediateLine:- write('|            |                         |                           |                           |                           |             |').
 displayBorderHorizontal:- write(' ________________________________________________________________________________________________________________________________________').
 displayBorderVertical:- write('|').
 
-% displays a line of the board
+/*
+ * displayLine(+Line, +N, +Nrow)
+ *	
+ * Displays a row of the board.
+ * N is the number of the cell to be displayed and Nrow is the number of the current row.
+ *
+ */
 displayLine([], _, _).
 displayLine([C|[]], _, Nrow):- displayCell(C), displayBorderVertical, write(' '), write(Nrow), nl.
 displayLine([C|L], N, Nrow):- N =:= 5, !, N1 is N-1, displayBorderVertical, displayCell(C), write(' -- '), displayLine(L, N1, Nrow).
 displayLine([C|L], N, Nrow):- N1 is N-1, displayCell(C), write(' -- '), displayLine(L, N1, Nrow).
 
-% displays a cell of the board
+/*
+ * displayCell(+Cell)
+ *	
+ * Displays a cell of the board.
+ *
+ */
 displayCell([]).
 displayCell([P|R]):- displayPiece(P), displayCell(R).
 
-% displays a piece
+/*
+ * displayPiece(+C)
+ *	
+ * Displays a piece.
+ *
+ */
 displayPiece(C):- getCode(C, Code),write(Code).
 
 % generates a board with Npieces pieces per cell, Ncols columns and N rows
