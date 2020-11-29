@@ -198,7 +198,7 @@ displayBot2DifficultyMenu:-
  * Displays the main menu and handles user input
  *
  */
-mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   : '), getInputAndValidate(0, 4, UserChoice), !, handleChoice(UserChoice), mainMenu.
+mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   : '), getInputAndValidate(0, 4, UserChoice), !, handleChoice(UserChoice).
 
 /*
  * botDifficultyMenu/0

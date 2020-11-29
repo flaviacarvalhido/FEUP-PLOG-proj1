@@ -58,8 +58,9 @@ addToList(ListToAdd, TargetList, NewList):-
  * Asks the user for input and then verifies if it is in the interval [Low, High]
  *
  */
-getInputAndValidate(Low, High, Input):- get Input asking 'Your choice: ',
+getInputAndValidate(Low, High, Input):- write('Your choice: '), nl, read(Input), integer(Input),
 										between(Low, High, Input).
+
 
 /*
  * replaceInRow(+Row, +IndexToReplace, +ValueToReplace, -NewRow)

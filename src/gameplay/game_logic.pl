@@ -1,6 +1,6 @@
 :- use_module(library(lists)).
-:- include('../other/utils.pl').
-:- include('../display/menus.pl').
+:- use_module('../other/utils.pl').
+:- ensure_loaded('../display/menus.pl').
 
 /*
  * validCoords(+Nrows, +Ncols, +X, +Y)
@@ -36,7 +36,7 @@ askForPiece(Move, Player, Board):-
  */
 selectStack(Coords, Player, Board):-
 	get StackRow asking 'Select the stack you wish to move: X? ',
-	get StackColumn asking 'Y? ', nl, !,
+	get StackColumn asking 'Y? ', nl,
 	Coords = [StackColumn, StackRow],
 	checkSelection(StackColumn, StackRow, Player, Board).
 selectStack(Coords, Player, Board):-
@@ -78,7 +78,7 @@ askForMove(InitialPos, GameState, Move):-
 	Coords = [DestColumn, DestRow],
 	nth0(0, GameState, Board),
 	append(InitialPos, Coords, Move),
-	write(Move), nl, !,
+	write(Move), nl,
 	validMove(Move, Board).
 askForMove(InitialPos, GameState, Move):-
 	write('Invalid Move.'), nl,

@@ -1,4 +1,5 @@
 
+%:-include('game_logic.pl').
 :-include('../display/board.pl').
 :-include('ai.pl').
 :-use_module(library(system)).
