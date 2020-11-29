@@ -60,6 +60,7 @@ addToList(ListToAdd, TargetList, NewList):-
  */
 getInputAndValidate(Low, High, Input):- write('Your choice: '), nl, read(Input), integer(Input),
 										between(Low, High, Input).
+getInputAndValidate(Low, High, Input):- write('Incorrect Selection'), nl, getInputAndValidate(Low, High, Input).
 
 
 /*
