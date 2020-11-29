@@ -1,4 +1,4 @@
-:- include('../other/utils.pl').
+%:- include('../other/utils.pl').
 
 % generates the initial state of the game
 initial(GameState):- initialBoard(Board),

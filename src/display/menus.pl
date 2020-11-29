@@ -198,7 +198,7 @@ displayBot2DifficultyMenu:-
  * Displays the main menu and handles user input
  *
  */
-mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   : '), getInputAndValidate(0, 4, UserChoice), !, handleChoice(UserChoice).
+mainMenu:- clearConsole, displayMainMenu, nl, write('What do you want to do?   : '), getInputAndValidate(0, 4, UserChoice), !, \+handleChoice(UserChoice), mainMenu.
 
 /*
  * botDifficultyMenu/0
@@ -230,7 +230,7 @@ bot2DifficultyMenu(Bot2Diff):- clearConsole, displayBot2DifficultyMenu, nl, getI
  * Handles the user input received in Choice, calling the right predicates, depending on the chosen menu option
  *
  */
-handleChoice(0):- clearConsole, write('It''s a shame you don''t want to play anymore. Quitting...'),false.
+handleChoice(0):- clearConsole, write('It''s a shame you don''t want to play anymore. Quitting...').
 handleChoice(1):- write('Starting game'), nl, !, playGamePlayerVsPlayer.
 handleChoice(2):- botDifficultyMenu(BotLevel), !, playGamePlayerVsComputer(BotLevel).
 handleChoice(3):- botDifficultyMenu(BotLevel), !, playGameComputerVsPlayer(BotLevel).
