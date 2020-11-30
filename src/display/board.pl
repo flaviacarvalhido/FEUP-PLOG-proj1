@@ -123,6 +123,20 @@ displayBorderHorizontalAlt:-	write('|___________________________________________
 displayIntermediateLineEmptyAlt:-	write('|             |             |             |             |             |'), nl.
 displayIntermediateLineAlt:-	write('|---------------------------------------------------------------------|---'), nl.
 
+/* displayGame(+GameState, +Player)
+ *
+ * Displays the received GameState
+ *
+ */
+displayGame(GameState, Player):- 
+	nth0(0, GameState, Board),
+	nth0(1, GameState, BlackCubes),
+	nth0(2, GameState, WhiteCubes),
+	displayFullBoardAlt(Board),
+	write(Player), write(' is up next.'), nl,
+	write('Black has '), write(BlackCubes), write(' cubes available to play.'), nl,
+	write('White has '), write(WhiteCubes), write(' cubes available to play.'), nl.
+
 /*
  * displayFullBoardAlt(+Board)
  *	
@@ -138,7 +152,7 @@ displayFullBoardAlt(Board):- displayCoordsHorizontal, displayBorderHorizontalAlt
  *
  */
 displayBoardAlt([], _).
-displayBoardAlt([BoardHead|BoardTail], 4):-	displayIntermediateLineEmptyAlt, displayRowAlt(BoardHead, 0, 5, 4), nl, displayRowAlt(BoardHead, 1, 5, 0), nl, displayIntermediateLineEmptyAlt, displayBoardAlt(BoardTail, N1).
+displayBoardAlt([BoardHead|BoardTail], 4):-	displayIntermediateLineEmptyAlt, displayRowAlt(BoardHead, 0, 5, 4), nl, displayRowAlt(BoardHead, 1, 5, 0), nl, displayIntermediateLineEmptyAlt, displayBoardAlt(BoardTail, _).
 displayBoardAlt([BoardHead|BoardTail], N):-	N1 is N+1, displayIntermediateLineEmptyAlt, displayRowAlt(BoardHead, 0, 5, N), nl, displayRowAlt(BoardHead, 1, 5, N), nl, displayIntermediateLineEmptyAlt, displayIntermediateLineAlt, displayBoardAlt(BoardTail, N1).
 
 /*
